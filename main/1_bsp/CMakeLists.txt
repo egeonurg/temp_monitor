@@ -1,0 +1,5 @@
+add_subdirectory(adc)
+add_subdirectory(dma)
+add_subdirectory(gpio)
+add_subdirectory(i2c)
+add_subdirectory(tim)

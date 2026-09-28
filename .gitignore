@@ -1,0 +1,8 @@
+build/
+build-cmake-tools/
+
+# Local review notes, not part of the published project
+TODO.md
+
+# draw.io autosave, backup and lock files
+.$*

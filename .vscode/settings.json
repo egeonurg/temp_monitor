@@ -1,0 +1,9 @@
+{
+    // The build/ directory is owned by build.bat, which pins the native MinGW
+    // compiler. Let the CMake Tools extension not configure it: an ARM kit
+    // would rewrite the cache with arm-none-eabi-gcc and every host build
+    // afterwards fails at the link step.
+    "cmake.configureOnOpen": false,
+    "cmake.automaticReconfigure": false,
+    "cmake.buildDirectory": "${workspaceFolder}/build-cmake-tools"
+}

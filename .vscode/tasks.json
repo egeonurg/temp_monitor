@@ -1,0 +1,14 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build (Debug)",
+            "type": "shell",
+            "command": "${workspaceFolder}\\main\\3_bat\\build.bat",
+            "args": ["Debug"],
+            "options": { "shell": { "executable": "cmd.exe", "args": ["/d", "/c"] } },
+            "group": { "kind": "build", "isDefault": true },
+            "problemMatcher": ["$gcc"]
+        }
+    ]
+}
