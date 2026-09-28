@@ -12,6 +12,21 @@ static uint16_t temp_sensor_prescaler = TEMP_SENSOR_REVISION_A_PRESCALER;
 static uint16_t temp_sensor_buffer[TEMP_SENSOR_SAMPLE_COUNT] = {0}; 
 static led_condition_t condition = LED_NORMAL_CONDITION;
 
+static temp_sensor_callback_t condition_update_callback = NULL;
+
+uint8_t set_condition_update_callback(temp_sensor_callback_t function)
+{
+    if(function != NULL)
+    {
+        condition_update_callback = function;
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 uint16_t* get_temp_sensor_buffer(void)
 {
     return temp_sensor_buffer;
@@ -88,6 +103,12 @@ static void temp_sensor_evaluate_codition(uint16_t value)
         return;
     }
 
+    if(condition_update_callback == 0)
+    {
+        TEMP_SENSOR_ASSERT(0, "Callback function uninitialized");
+        return;
+    }
+    
   switch(condition)
   {
    case LED_NORMAL_CONDITION:
@@ -96,12 +117,14 @@ static void temp_sensor_evaluate_codition(uint16_t value)
         {
             condition = LED_WARNING_CONDITION;
             TEMP_SENSOR_LOG("condition -> WARNING at %u C\n", (unsigned int)filtered_avg_temp_with_prescaler);
+            condition_update_callback(LED_WARNING_CONDITION);
         }
         else if(   filtered_avg_temp_with_prescaler < TEMP_SENSOR_WARNING_LOWER_THRESHOLD
                 || filtered_avg_temp_with_prescaler >= TEMP_SENSOR_CRITICAL_LOWER_THRESHOLD) /* t < 5 C or t >= 105 C */
         {
             condition = LED_CRITICAL_CONDITION;
             TEMP_SENSOR_LOG("condition -> CRITICAL at %u C\n", (unsigned int)filtered_avg_temp_with_prescaler);
+            condition_update_callback(LED_CRITICAL_CONDITION);
         }
         else
         {
@@ -114,12 +137,14 @@ static void temp_sensor_evaluate_codition(uint16_t value)
         {
             condition = LED_NORMAL_CONDITION;
             TEMP_SENSOR_LOG("condition -> NORMAL at %u C\n", (unsigned int)filtered_avg_temp_with_prescaler);
+            condition_update_callback(LED_NORMAL_CONDITION);
         }
         else if(   filtered_avg_temp_with_prescaler >= TEMP_SENSOR_CRITICAL_LOWER_THRESHOLD 
                 || filtered_avg_temp_with_prescaler < TEMP_SENSOR_WARNING_LOWER_THRESHOLD)
         {
             condition = LED_CRITICAL_CONDITION;
             TEMP_SENSOR_LOG("condition -> CRITICAL at %u C\n", (unsigned int)filtered_avg_temp_with_prescaler);
+            condition_update_callback(LED_CRITICAL_CONDITION);
         }
         else
         {
@@ -132,12 +157,14 @@ static void temp_sensor_evaluate_codition(uint16_t value)
         {
             condition = LED_NORMAL_CONDITION;
             TEMP_SENSOR_LOG("condition -> NORMAL at %u C\n", (unsigned int)filtered_avg_temp_with_prescaler);
+            condition_update_callback(LED_NORMAL_CONDITION);
         }
         else if(   filtered_avg_temp_with_prescaler <= (TEMP_SENSOR_CRITICAL_LOWER_THRESHOLD - TEMP_SENSOR_HYSTERESIS_VALUE) 
                 && filtered_avg_temp_with_prescaler >= TEMP_SENSOR_WARNING_UPPER_THRESHOLD)
         {
             condition = LED_WARNING_CONDITION;
             TEMP_SENSOR_LOG("condition -> WARNING at %u C\n", (unsigned int)filtered_avg_temp_with_prescaler);
+            condition_update_callback(LED_WARNING_CONDITION);
         }
         else
         {

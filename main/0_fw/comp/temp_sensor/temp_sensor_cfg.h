@@ -16,11 +16,4 @@
 
 #define TEMP_SENSOR_HYSTERESIS_VALUE 2
 
-typedef enum
-{
-    LED_NORMAL_CONDITION = 0u,
-    LED_WARNING_CONDITION = 1u,
-    LED_CRITICAL_CONDITION = 2u
-}led_condition_t;
-
 #endif /* TEMP_SENSOR_CFG_H */

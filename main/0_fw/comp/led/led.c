@@ -9,6 +9,14 @@ static const uint8_t led_pin[LED_COUNT] =
     LED_ORANGE_PIN
 };
 
+/* Name of each LED for the log, indexed by led id. */
+static const char * const led_name[LED_COUNT] =
+{
+    "GREEN",
+    "RED",
+    "ORANGE"
+};
+
 static uint8_t led_active = LED_DEFAULT_ACTIVE;
 
 static uint8_t led_id_is_valid(uint8_t led_id)
@@ -72,9 +80,7 @@ uint8_t led_set_active(uint8_t led_id)
 
     led_active = led_id;
 
-    LED_LOG("active LED %u (pin %u)\n",
-            (unsigned int)led_active,
-            (unsigned int)led_pin[led_active]);
+    LED_LOG("%s on\n", led_name[led_active]);
 
     return LED_OK;
 }

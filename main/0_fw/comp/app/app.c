@@ -7,6 +7,7 @@ static uint16_t app_full_event_number = 0u;
 
 /* Placeholder only: read and reported, not used. +1 for the terminator. */
 static char app_serial_number[EEPROM_SERIAL_NUMBER_LENGTH + 1u] = {0};
+static void app_temp_on_condition_update_callback(led_condition_t cond);
 
 void app_init(void)
 {
@@ -38,6 +39,7 @@ void app_init(void)
            (unsigned int)APP_TEMP_SENSOR_REVISION(),
            (unsigned int)APP_TEMP_SENSOR_PRESCALER());
 
+    set_condition_update_callback(app_temp_on_condition_update_callback);
     /* The samples belong to the temp sensor; the DMA only needs to know where
        to put them. */
     sample_buffer      = APP_TEMP_SENSOR_BUFFER();
@@ -77,6 +79,27 @@ void app_init(void)
         APP_ASSERT(0, "Failed to initialise the A/D trigger timer");
     }
 }
+
+static void app_temp_on_condition_update_callback(led_condition_t cond)
+{
+    if(cond == LED_NORMAL_CONDITION)
+    {
+        led_set_active(LED_GREEN);
+    }
+    else if(cond == LED_WARNING_CONDITION)
+    {
+        led_set_active(LED_ORANGE);
+    }
+    else if (cond == LED_CRITICAL_CONDITION)
+    {
+        led_set_active(LED_RED);
+    }
+    else
+    {
+        // No operation, invalid cond.
+    }
+}
+
 
 uint8_t app_get_1ms_flag(void)
 {

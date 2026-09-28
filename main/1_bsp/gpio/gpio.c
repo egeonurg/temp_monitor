@@ -18,7 +18,8 @@ void gpio_deinit(uint8_t pin, uint8_t direction)
 
 void gpio_write(uint8_t pin, uint8_t value)
 {
-    GPIO_LOG("GPIO pin %d written with value %d\n", pin, value);
+    (void)pin;
+    (void)value;
 }
 
 uint8_t gpio_read(uint8_t pin)
