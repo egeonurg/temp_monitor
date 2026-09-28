@@ -9,6 +9,7 @@
 /* The address is an offset into the EEPROM, not a pointer into memory. */
 extern uint16_t eeprom_read(uint16_t address, void *data, uint16_t size);
 
-#define EEPROM_READ(address, data) eeprom_read(address, data, sizeof(uint16_t))
+/* Reads exactly as many bytes as the destination holds. */
+#define EEPROM_READ(address, data) eeprom_read(address, data, (uint16_t)sizeof(*(data)))
 
 #endif /* EEPROM_IFA_H */

@@ -9,17 +9,9 @@ static uint16_t  dma_index     = 0u;
 static volatile uint32_t dma_half_count = 0u;
 static volatile uint32_t dma_full_count = 0u;
 
-static volatile uint32_t dma_half_event_number = 0u;
-static volatile uint32_t dma_full_event_number = 0u;
-
 uint8_t dma_init(uint16_t *buffer, uint16_t size)
 {
     if ((buffer == NULL) || (size < 2u) || ((size % 2u) != 0u))
-    {
-        return DMA_ERR;
-    }
-
-    if ((size / 2u) > DMA_WORK_BUFFER_SIZE)
     {
         return DMA_ERR;
     }
@@ -65,7 +57,6 @@ void dma_half_transfer_isr(void)
         return;
     }
 
-    dma_half_event_number++;
     dma_half_count++;
 }
 
@@ -76,7 +67,6 @@ void dma_full_transfer_isr(void)
         return;
     }
 
-    dma_full_event_number++;
     dma_full_count++;
 }
 
@@ -91,6 +81,7 @@ void dma_get_transfer_counts(uint32_t *half, uint32_t *full)
     *full = dma_full_count;
 }
 
+#if defined(SIM_ENABLE)
 void dma_mock_sample(uint16_t sample)
 {
     if (dma_buffer == NULL)
@@ -115,13 +106,14 @@ void dma_mock_sample(uint16_t sample)
         /* Transfer still in progress. */
     }
 }
+#endif
 
 uint16_t dma_get_half_event_number(void)
 {
-    return (uint16_t)dma_half_event_number;
+    return (uint16_t)dma_half_count;
 }
 
 uint16_t dma_get_full_event_number(void)
 {
-    return (uint16_t)dma_full_event_number;
+    return (uint16_t)dma_full_count;
 }

@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <string.h>
 
 #include "platform_log.h"
 

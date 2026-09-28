@@ -144,10 +144,10 @@ Note the one gap: CMake does not detect cycles between static libraries, so
 | `1_bsp` | tim | yes | yes | yes | platform |
 | `1_bsp` | adc | yes | yes | yes | platform |
 | `1_bsp` | dma | yes | yes | yes | platform |
-| `0_fw` | eeprom | yes | yes | yes | i2c, platform |
+| `0_fw` | eeprom | yes | yes | yes | i2c |
 | `0_fw` | temp_sensor | yes | yes | yes | platform |
 | `0_fw` | led | yes | yes | yes | gpio, platform |
-| `0_fw` | app | yes | yes | yes | eeprom, temp_sensor, tim, adc, dma, platform |
+| `0_fw` | app | yes | yes | yes | eeprom, temp_sensor, led, tim, adc, dma, platform |
 | `4_sim` | sim | yes | yes | yes | tim, dma, temp_sensor, platform (host build only) |
 
 `platform` is the exception to the four-file shape: it is a header-only

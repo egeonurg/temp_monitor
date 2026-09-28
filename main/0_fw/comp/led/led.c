@@ -6,7 +6,7 @@ static const uint8_t led_pin[LED_COUNT] =
 {
     LED_GREEN_PIN,
     LED_RED_PIN,
-    LED_ORANGE_PIN
+    LED_YELLOW_PIN
 };
 
 /* Name of each LED for the log, indexed by led id. */
@@ -14,7 +14,7 @@ static const char * const led_name[LED_COUNT] =
 {
     "GREEN",
     "RED",
-    "ORANGE"
+    "YELLOW"
 };
 
 static uint8_t led_active = LED_DEFAULT_ACTIVE;

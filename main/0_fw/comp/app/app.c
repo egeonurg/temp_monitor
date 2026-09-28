@@ -7,13 +7,35 @@ static uint16_t app_full_event_number = 0u;
 
 /* Placeholder only: read and reported, not used. +1 for the terminator. */
 static char app_serial_number[EEPROM_SERIAL_NUMBER_LENGTH + 1u] = {0};
-static void app_temp_on_condition_update_callback(led_condition_t cond);
+
+/* Called by the temp sensor on a condition change: shows it on the LEDs. */
+static void app_on_temp_condition(APP_TEMP_SENSOR_CONDITION_T condition)
+{
+    switch (condition)
+    {
+        case APP_TEMP_SENSOR_NORMAL:
+            (void)APP_LED_SET_ACTIVE(APP_LED_NORMAL);
+            break;
+
+        case APP_TEMP_SENSOR_WARNING:
+            (void)APP_LED_SET_ACTIVE(APP_LED_WARNING);
+            break;
+
+        case APP_TEMP_SENSOR_CRITICAL:
+            (void)APP_LED_SET_ACTIVE(APP_LED_CRITICAL);
+            break;
+
+        default:
+            APP_ASSERT(0, "Unknown temp sensor condition");
+            break;
+    }
+}
 
 void app_init(void)
 {
-    uint16_t temp_sensor_revision = 0;
-    uint16_t *sample_buffer      = NULL;
-    uint16_t  sample_buffer_size = 0;
+    uint16_t  temp_sensor_revision = 0u;
+    uint16_t *sample_buffer        = NULL;
+    uint16_t  sample_buffer_size   = 0u;
 
     uint16_t eeprom_status = APP_READ_TEMP_SENSOR_REVISION(&temp_sensor_revision);
 
@@ -39,7 +61,18 @@ void app_init(void)
            (unsigned int)APP_TEMP_SENSOR_REVISION(),
            (unsigned int)APP_TEMP_SENSOR_PRESCALER());
 
-    set_condition_update_callback(app_temp_on_condition_update_callback);
+    /* LEDs before the callback: the first condition change must find the
+       pins configured. */
+    if (APP_LED_INIT() != APP_LED_OK)
+    {
+        APP_ASSERT(0, "Failed to initialise the LEDs");
+    }
+
+    if (APP_TEMP_SENSOR_SET_CALLBACK(app_on_temp_condition) != APP_TEMP_SENSOR_OK)
+    {
+        APP_ASSERT(0, "Failed to register the temp sensor callback");
+    }
+
     /* The samples belong to the temp sensor; the DMA only needs to know where
        to put them. */
     sample_buffer      = APP_TEMP_SENSOR_BUFFER();
@@ -80,27 +113,6 @@ void app_init(void)
     }
 }
 
-static void app_temp_on_condition_update_callback(led_condition_t cond)
-{
-    if(cond == LED_NORMAL_CONDITION)
-    {
-        led_set_active(LED_GREEN);
-    }
-    else if(cond == LED_WARNING_CONDITION)
-    {
-        led_set_active(LED_ORANGE);
-    }
-    else if (cond == LED_CRITICAL_CONDITION)
-    {
-        led_set_active(LED_RED);
-    }
-    else
-    {
-        // No operation, invalid cond.
-    }
-}
-
-
 uint8_t app_get_1ms_flag(void)
 {
     return APP_TIM_GET_1MS_FLAG();
@@ -110,7 +122,6 @@ void app_clear_1ms_flag(void)
 {
     APP_TIM_CLEAR_1MS_FLAG();
 }
-
 
 void app_handle_1ms_event(void)
 {

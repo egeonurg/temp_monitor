@@ -25,11 +25,26 @@
 #define APP_TEMP_SENSOR_INIT(revision)      temp_sensor_init(revision)
 #define APP_TEMP_SENSOR_REVISION()          temp_sensor_get_revision()
 #define APP_TEMP_SENSOR_PRESCALER()         temp_sensor_get_prescaler()
-#define APP_TEMP_SENSOR_BUFFER()            get_temp_sensor_buffer()
-#define APP_TEMP_SENSOR_BUFFER_SIZE()       get_temp_sensor_buffer_size()
+#define APP_TEMP_SENSOR_BUFFER()            temp_sensor_get_buffer()
+#define APP_TEMP_SENSOR_BUFFER_SIZE()       temp_sensor_get_buffer_size()
 #define APP_TEMP_SENSOR_PROCESS(event)      temp_sensor_process_sample(event)
 #define APP_TEMP_SENSOR_HALF_TRANSFER       TEMP_SENSOR_HALF_TRANSFER_EVENT
 #define APP_TEMP_SENSOR_FULL_TRANSFER       TEMP_SENSOR_FULL_TRANSFER_EVENT
+#define APP_TEMP_SENSOR_OK                  TEMP_SENSOR_OK
+#define APP_TEMP_SENSOR_SET_CALLBACK(cb)    temp_sensor_set_condition_callback(cb)
+#define APP_TEMP_SENSOR_CONDITION_T         temp_sensor_condition_t
+#define APP_TEMP_SENSOR_NORMAL              TEMP_SENSOR_CONDITION_NORMAL
+#define APP_TEMP_SENSOR_WARNING             TEMP_SENSOR_CONDITION_WARNING
+#define APP_TEMP_SENSOR_CRITICAL            TEMP_SENSOR_CONDITION_CRITICAL
+
+/* Which LED shows which condition: the mapping is decided here, so neither
+   the sensor nor the LED driver knows about the other. */
+#define APP_LED_OK                          LED_OK
+#define APP_LED_INIT()                      led_init()
+#define APP_LED_SET_ACTIVE(led_id)          led_set_active(led_id)
+#define APP_LED_NORMAL                      LED_GREEN
+#define APP_LED_WARNING                     LED_YELLOW
+#define APP_LED_CRITICAL                    LED_RED
 
 #define APP_DMA_OK                          DMA_OK
 #define APP_DMA_INIT(buffer, size)          dma_init(buffer, size)

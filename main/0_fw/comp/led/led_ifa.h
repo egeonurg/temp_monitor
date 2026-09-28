@@ -9,7 +9,7 @@
 /* Exactly one of these is lit at any time. */
 #define LED_GREEN  0x00
 #define LED_RED    0x01
-#define LED_ORANGE 0x02
+#define LED_YELLOW 0x02
 #define LED_COUNT  0x03
 
 extern uint8_t led_init(void);

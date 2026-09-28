@@ -4,7 +4,7 @@
 /* Pin assigned to each LED. */
 #define LED_GREEN_PIN  0x0Au
 #define LED_RED_PIN    0x0Bu
-#define LED_ORANGE_PIN 0x0Cu
+#define LED_YELLOW_PIN 0x0Cu
 
 /* The LEDs are driven high to light them. */
 #define LED_LEVEL_ON  0x01u
