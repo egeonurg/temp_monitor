@@ -41,8 +41,8 @@ void app_init(void)
 
     if (eeprom_status != APP_EEPROM_OK)
     {
-        /* Leave the driver on its safe defaults rather than configuring it
-           from a value that was never read. */
+        /* Without the revision the reading scale is unknown: trap rather
+           than configure the sensor from a value that was never read. */
         APP_ASSERT(0, "Failed to read temp sensor revision from EEPROM");
     }
     else

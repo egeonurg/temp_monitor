@@ -14,8 +14,7 @@
 typedef enum
 {
     TEMP_SENSOR_HALF_TRANSFER_EVENT = 0u,
-    TEMP_SENSOR_FULL_TRANSFER_EVENT = 1u,
-    TEMP_SENSOR_EVENT_COUNT
+    TEMP_SENSOR_FULL_TRANSFER_EVENT = 1u
 } temp_sensor_event_t;
 
 typedef enum

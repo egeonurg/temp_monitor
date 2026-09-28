@@ -140,7 +140,7 @@ Note the one gap: CMake does not detect cycles between static libraries, so
 |---|---|:--:|:--:|:--:|---|
 | `platform` | platform | — | — | — | (headers only: log, assert) |
 | `1_bsp` | gpio | yes | yes | — | platform |
-| `1_bsp` | i2c | yes | yes | yes | platform |
+| `1_bsp` | i2c | yes | yes | yes | (none) |
 | `1_bsp` | tim | yes | yes | yes | platform |
 | `1_bsp` | adc | yes | yes | yes | platform |
 | `1_bsp` | dma | yes | yes | yes | platform |

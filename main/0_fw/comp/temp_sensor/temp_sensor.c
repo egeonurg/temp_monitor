@@ -6,6 +6,14 @@
 #define TEMP_SENSOR_HALF_COUNT       (TEMP_SENSOR_SAMPLE_COUNT / 2u)
 #define TEMP_SENSOR_WINDOWS_PER_HALF (TEMP_SENSOR_HALF_COUNT / TEMP_SENSOR_MEDIAN_WINDOW)
 
+#if (TEMP_SENSOR_HALF_COUNT % TEMP_SENSOR_MEDIAN_WINDOW) != 0u
+#error "Half buffer must hold a whole number of median windows"
+#endif
+
+#if TEMP_SENSOR_MEDIAN_WINDOW != 5u
+#error "temp_sensor_median_5_filter is written for 5 samples"
+#endif
+
 static uint16_t temp_sensor_revision  = TEMP_SENSOR_REVISION_EMPTY;
 static uint16_t temp_sensor_prescaler = TEMP_SENSOR_REVISION_A_PRESCALER;
 
@@ -62,7 +70,8 @@ void temp_sensor_init(uint16_t revision)
             break;
 
         default:
-            /* Unknown silicon: keep the safe defaults. */
+            /* Unknown silicon: the resolution is unknown, so no reading
+               could be trusted. Trap rather than run on a guess. */
             TEMP_SENSOR_ASSERT(0, "Unknown temp sensor revision");
             break;
     }

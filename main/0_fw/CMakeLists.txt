@@ -2,8 +2,8 @@ add_subdirectory(comp)
 
 add_executable(${PROJECT_NAME} main.c)
 
-# app performs the start-up wiring; temp_sensor is linked for the readback.
-# main talks to app only: every driver below it is app's private dependency.
+# app performs the start-up wiring. main talks to app only: every driver
+# below it is app's private dependency.
 target_link_libraries(${PROJECT_NAME} PRIVATE
     app
     project_warnings

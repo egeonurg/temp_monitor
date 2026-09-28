@@ -21,10 +21,3 @@ void gpio_write(uint8_t pin, uint8_t value)
     (void)pin;
     (void)value;
 }
-
-uint8_t gpio_read(uint8_t pin)
-{
-    uint8_t value = 1; // Mock value
-    GPIO_LOG("GPIO pin %d read with value %d\n", pin, value);
-    return value;
-}
