@@ -5,6 +5,9 @@
 static uint16_t app_half_event_number = 0u;
 static uint16_t app_full_event_number = 0u;
 
+/* Placeholder only: read and reported, not used. +1 for the terminator. */
+static char app_serial_number[EEPROM_SERIAL_NUMBER_LENGTH + 1u] = {0};
+
 void app_init(void)
 {
     uint16_t temp_sensor_revision = 0;
@@ -21,8 +24,15 @@ void app_init(void)
     }
     else
     {
-        APP_TEMP_SENSOR_INIT();
+        APP_TEMP_SENSOR_INIT(temp_sensor_revision);
     }
+
+    if (APP_READ_SERIAL_NUMBER(app_serial_number) != APP_EEPROM_OK)
+    {
+        APP_ASSERT(0, "Failed to read serial number from EEPROM");
+    }
+
+    APP_LOG("serial number %s\n", app_serial_number);
 
     APP_LOG("temp sensor revision %u, prescaler %u\n",
            (unsigned int)APP_TEMP_SENSOR_REVISION(),

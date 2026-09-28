@@ -1,43 +1,24 @@
 #include "i2c_ifa.h"
 #include "i2c_inc.h"
 
-/* Mock peripheral state. On real hardware these are register reads. */
-static uint8_t i2c_bus_is_busy(void)
-{
-    return 0u;
-}
-
-static uint8_t i2c_receive_byte(uint16_t reg_address, uint16_t index)
-{
-    return (uint8_t)(reg_address + index);
-}
-
+/* Mock */
 uint8_t i2c_read(uint8_t slave_address, uint16_t reg_address, uint8_t *data, uint16_t size)
 {
-    uint16_t timeout = 0u;
+    static const char serial[] = I2C_MOCK_SERIAL_NUMBER;
     uint16_t index = 0u;
 
-    if ((data == NULL) || (size == 0u))
-    {
-        return I2C_ERR;
-    }
+    (void)slave_address;
 
-    /* Blocking: spin until the bus is free or the timeout expires. */
-    while (i2c_bus_is_busy() != 0u)
+    if (reg_address == I2C_MOCK_SERIAL_NUMBER_REG)
     {
-        timeout++;
-        if (timeout >= I2C_READ_TIMEOUT)
+        for (index = 0u; (index < size) && (index < sizeof(serial)); index++)
         {
-            return I2C_TIMEOUT;
+            data[index] = (uint8_t)serial[index];
         }
     }
-
-    I2C_LOG("I2C read: slave 0x%02X, reg 0x%04X, %u byte(s)\n",
-           slave_address, reg_address, size);
-
-    for (index = 0u; index < size; index++)
+    else
     {
-        data[index] = i2c_receive_byte(reg_address, index);
+        data[0] = I2C_MOCK_READ_VALUE;
     }
 
     return I2C_OK;

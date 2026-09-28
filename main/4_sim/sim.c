@@ -19,12 +19,28 @@
    revision A one count is 1 degree, with revision B one count is 0.1 degree,
    so 100 degrees is 100 counts or 1000 counts respectively. */
 
-/* Temperatures the run walks through, in whole degrees. */
+/* Temperatures the run walks through, in whole degrees, with the condition
+   each one must produce. Spec: G < 85, Y >= 85, R >= 105 or < 5, plus 2 C
+   exit hysteresis. The noise swings the filtered average between the set point
+   and one below it, so a set point ON a threshold proves the hysteresis: the
+   average crosses the line back and forth, the condition must not.
+   The list ends where it starts, so it loops cleanly. */
 static const uint16_t sim_setpoint_deg[] =
 {
-     82u,  85u,  88u,
-      2u,   5u,   7u,
-    103u, 105u, 107u
+     80u,   /* NORMAL                                           */
+     85u,   /* WARNING  on the threshold: 84/85, no flicker     */
+     83u,   /* NORMAL   leaves warning at 83                    */
+    110u,   /* CRITICAL straight from normal, no yellow step    */
+    105u,   /* CRITICAL on the threshold: 104/105, no flicker   */
+    103u,   /* WARNING  leaves critical at 103                  */
+    105u,   /* CRITICAL                                         */
+     84u,   /* NORMAL   straight from critical                  */
+      5u,   /* CRITICAL on the threshold: 4/5, held once in     */
+      7u,   /* NORMAL   leaves low critical at 7                */
+     90u,   /* WARNING                                          */
+      4u,   /* CRITICAL straight from warning, no green step    */
+     90u,   /* WARNING  straight from low critical              */
+     80u    /* NORMAL                                           */
 };
 
 #define SIM_SETPOINT_COUNT (sizeof(sim_setpoint_deg) / sizeof(sim_setpoint_deg[0]))

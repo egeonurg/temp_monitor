@@ -6,8 +6,8 @@
 #define TEMP_SENSOR_HALF_COUNT       (TEMP_SENSOR_SAMPLE_COUNT / 2u)
 #define TEMP_SENSOR_WINDOWS_PER_HALF (TEMP_SENSOR_HALF_COUNT / TEMP_SENSOR_MEDIAN_WINDOW)
 
-static uint16_t temp_sensor_revision  = TEMP_SENSOR_REVISION;
-static uint16_t temp_sensor_prescaler = TEMP_SENSOR_REVISION_1_PRESCALER;
+static uint16_t temp_sensor_revision  = TEMP_SENSOR_REVISION_EMPTY;
+static uint16_t temp_sensor_prescaler = TEMP_SENSOR_REVISION_A_PRESCALER;
 
 static uint16_t temp_sensor_buffer[TEMP_SENSOR_SAMPLE_COUNT] = {0}; 
 static led_condition_t condition = LED_NORMAL_CONDITION;
@@ -22,18 +22,19 @@ uint16_t get_temp_sensor_buffer_size(void)
     return TEMP_SENSOR_SAMPLE_COUNT;
 }
 
-void temp_sensor_init(void)
-{
-    switch (temp_sensor_revision)
+void temp_sensor_init(uint16_t revision)
+{    
+    switch (revision)
     {
         case TEMP_SENSOR_REVISION_A:
-            temp_sensor_prescaler = TEMP_SENSOR_REVISION_1_PRESCALER;
+            temp_sensor_revision = TEMP_SENSOR_REVISION_A;
+            temp_sensor_prescaler = TEMP_SENSOR_REVISION_A_PRESCALER;
             break;
 
         case TEMP_SENSOR_REVISION_B:
-            temp_sensor_prescaler = TEMP_SENSOR_REVISION_2_PRESCALER;
+            temp_sensor_revision = TEMP_SENSOR_REVISION_B;
+            temp_sensor_prescaler = TEMP_SENSOR_REVISION_B_PRESCALER;
             break;
-
         default:
             /* Unknown silicon: keep the safe defaults. */
             TEMP_SENSOR_ASSERT(0, "Unknown temp sensor revision");
@@ -173,14 +174,12 @@ void temp_sensor_process_sample(temp_sensor_event_t event)
     {
         /* Process the first half of the buffer. */
         uint32_t filtered_average_temp = temp_sensor_filtered_average(&temp_sensor_buffer[0]);
-        TEMP_SENSOR_LOG("filtered average (first half): %u counts\n",(unsigned int)filtered_average_temp);
         temp_sensor_evaluate_codition((uint16_t)filtered_average_temp);
     }
     else if(event == TEMP_SENSOR_FULL_TRANSFER_EVENT)
     {
         /* Process the second half of the buffer. */
         uint32_t filtered_average_temp = temp_sensor_filtered_average(&temp_sensor_buffer[TEMP_SENSOR_HALF_COUNT]);
-        TEMP_SENSOR_LOG("filtered average (second half): %u counts\n",(unsigned int)filtered_average_temp);
         temp_sensor_evaluate_codition((uint16_t)filtered_average_temp);
     }
 }

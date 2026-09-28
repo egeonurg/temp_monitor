@@ -6,10 +6,6 @@ static uint16_t  dma_size      = 0u;
 static uint16_t  dma_half_size = 0u;
 static uint16_t  dma_index     = 0u;
 
-/* Samples are copied out of the DMA buffer here, so the controller can keep
-   filling the other half while they are processed. */
-static uint16_t dma_work_buffer[DMA_WORK_BUFFER_SIZE];
-
 static volatile uint32_t dma_half_count = 0u;
 static volatile uint32_t dma_full_count = 0u;
 
@@ -69,20 +65,8 @@ void dma_half_transfer_isr(void)
         return;
     }
 
-    /* The first half is stable now; copy it out while the DMA fills the rest. */
-    (void)memcpy(dma_work_buffer, &dma_buffer[0], (size_t)dma_half_size * sizeof(uint16_t));
-
     dma_half_event_number++;
     dma_half_count++;
-
-    if ((dma_half_count % DMA_LOG_INTERVAL) == 0u)
-    {
-        DMA_LOG("half transfer %u: %u samples copied (first %u, last %u)\n",
-               (unsigned int)dma_half_count,
-               (unsigned int)dma_half_size,
-               (unsigned int)dma_work_buffer[0],
-               (unsigned int)dma_work_buffer[dma_half_size - 1u]);
-    }
 }
 
 void dma_full_transfer_isr(void)
@@ -92,20 +76,8 @@ void dma_full_transfer_isr(void)
         return;
     }
 
-    /* The second half is stable now; copy it out while the DMA wraps around. */
-    (void)memcpy(dma_work_buffer, &dma_buffer[dma_half_size], (size_t)dma_half_size * sizeof(uint16_t));
-
     dma_full_event_number++;
     dma_full_count++;
-
-    if ((dma_full_count % DMA_LOG_INTERVAL) == 0u)
-    {
-        DMA_LOG("full transfer %u: %u samples copied (first %u, last %u)\n",
-               (unsigned int)dma_full_count,
-               (unsigned int)dma_half_size,
-               (unsigned int)dma_work_buffer[0],
-               (unsigned int)dma_work_buffer[dma_half_size - 1u]);
-    }
 }
 
 void dma_get_transfer_counts(uint32_t *half, uint32_t *full)

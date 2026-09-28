@@ -8,7 +8,7 @@
 #define SIM_TICK_PERIOD_US 1000u
 
 /* How long a simulated run lasts before the superloop is asked to stop. */
-#define SIM_RUN_MS      10000u
+#define SIM_RUN_MS      5600u   /* the set point list twice */
 #define SIM_RUN_SAMPLES ((SIM_RUN_MS * 1000u) / SIM_SAMPLE_PERIOD_US)
 
 /* How long each temperature set point is held before moving to the next. */

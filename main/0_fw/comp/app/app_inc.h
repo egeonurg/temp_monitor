@@ -19,8 +19,10 @@
 
 #define APP_EEPROM_OK                       EEPROM_READ_OK
 #define APP_READ_TEMP_SENSOR_REVISION(data) EEPROM_READ(EEPROM_TEMP_SENSOR_ADDRESS, data)
+#define APP_READ_SERIAL_NUMBER(data)        eeprom_read(EEPROM_SERIAL_NUMBER_ADDRESS, data, EEPROM_SERIAL_NUMBER_LENGTH)
+#define APP_TEMP_SENSOR_REVISION_EMPTY      TEMP_SENSOR_REVISION_EMPTY
 
-#define APP_TEMP_SENSOR_INIT()              temp_sensor_init()
+#define APP_TEMP_SENSOR_INIT(revision)      temp_sensor_init(revision)
 #define APP_TEMP_SENSOR_REVISION()          temp_sensor_get_revision()
 #define APP_TEMP_SENSOR_PRESCALER()         temp_sensor_get_prescaler()
 #define APP_TEMP_SENSOR_BUFFER()            get_temp_sensor_buffer()
