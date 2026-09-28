@@ -11,6 +11,7 @@
 #include "platform_assert.h"
 #include "platform_log.h"
 #include "app_cfg.h"
+#include "led_ifa.h"
 
 /* Required interfaces, remapped to names this component owns. app.c uses only
    the APP_* names, so any provider below can be swapped or cut out without
