@@ -34,13 +34,13 @@ extern void temp_sensor_init(uint16_t revision);
 
 extern uint16_t temp_sensor_get_revision(void);
 
-extern uint16_t temp_sensor_get_prescaler(void);
+extern uint16_t temp_sensor_get_counts_per_deg(void);
 
 extern uint16_t *temp_sensor_get_buffer(void);
 
 extern uint16_t temp_sensor_get_buffer_size(void);
 
-extern void temp_sensor_process_sample(temp_sensor_event_t event);
+extern void temp_sensor_process_half(temp_sensor_event_t event);
 
 extern uint8_t temp_sensor_set_condition_callback(temp_sensor_callback_t callback);
 

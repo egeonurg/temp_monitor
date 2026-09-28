@@ -15,7 +15,7 @@
 #endif
 
 static uint16_t temp_sensor_revision  = TEMP_SENSOR_REVISION_EMPTY;
-static uint16_t temp_sensor_prescaler = TEMP_SENSOR_REVISION_A_PRESCALER;
+static uint16_t temp_sensor_counts_per_deg = TEMP_SENSOR_REVISION_A_COUNTS_PER_DEG;
 
 /* Filled by the DMA: the first half while the second is processed, and the
    other way round. A half must be processed within one half period (10 ms),
@@ -61,12 +61,12 @@ void temp_sensor_init(uint16_t revision)
     {
         case TEMP_SENSOR_REVISION_A:
             temp_sensor_revision  = TEMP_SENSOR_REVISION_A;
-            temp_sensor_prescaler = TEMP_SENSOR_REVISION_A_PRESCALER;
+            temp_sensor_counts_per_deg = TEMP_SENSOR_REVISION_A_COUNTS_PER_DEG;
             break;
 
         case TEMP_SENSOR_REVISION_B:
             temp_sensor_revision  = TEMP_SENSOR_REVISION_B;
-            temp_sensor_prescaler = TEMP_SENSOR_REVISION_B_PRESCALER;
+            temp_sensor_counts_per_deg = TEMP_SENSOR_REVISION_B_COUNTS_PER_DEG;
             break;
 
         default:
@@ -82,9 +82,9 @@ uint16_t temp_sensor_get_revision(void)
     return temp_sensor_revision;
 }
 
-uint16_t temp_sensor_get_prescaler(void)
+uint16_t temp_sensor_get_counts_per_deg(void)
 {
-    return temp_sensor_prescaler;
+    return temp_sensor_counts_per_deg;
 }
 
 /* Median of 5 consecutive samples. Caller guarantees buffer has >= 5 entries. */
@@ -140,9 +140,9 @@ static void temp_sensor_evaluate_condition(uint16_t value)
 {
     uint16_t temp_deg = 0u;
 
-    if (temp_sensor_prescaler == 0u)
+    if (temp_sensor_counts_per_deg == 0u)
     {
-        TEMP_SENSOR_ASSERT(0, "Prescaler is zero");
+        TEMP_SENSOR_ASSERT(0, "Counts per degree is zero");
         return;
     }
 
@@ -152,7 +152,7 @@ static void temp_sensor_evaluate_condition(uint16_t value)
         return;
     }
 
-    temp_deg = value / temp_sensor_prescaler;
+    temp_deg = value / temp_sensor_counts_per_deg;
 
     switch (temp_sensor_condition)
     {
@@ -211,7 +211,7 @@ static void temp_sensor_evaluate_condition(uint16_t value)
     }
 }
 
-void temp_sensor_process_sample(temp_sensor_event_t event)
+void temp_sensor_process_half(temp_sensor_event_t event)
 {
     uint32_t filtered_average = 0u;
 

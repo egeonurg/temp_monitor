@@ -5,8 +5,8 @@
    handled inside the drivers, and only the 1 ms event flag reaches here. */
 #if defined(SIM_ENABLE)
 #include "sim_ifa.h"
-#define MAIN_SIM_START()  (void)sim_start()
-#define MAIN_LOOP_RUNNING sim_is_running()
+#define MAIN_SIM_START()  ((void)sim_start())
+#define MAIN_LOOP_RUNNING (sim_is_running() != 0u)
 #else
 #define MAIN_SIM_START()  ((void)0)
 #define MAIN_LOOP_RUNNING 1
@@ -18,12 +18,11 @@ int main(void)
 
     MAIN_SIM_START();
 
-    while(MAIN_LOOP_RUNNING)
+    while (MAIN_LOOP_RUNNING)
     {
-        if(app_get_1ms_flag())
+        if (app_get_1ms_flag() != 0u)
         {
             app_clear_1ms_flag();
-            // Handle 1ms event
             app_handle_1ms_event();
         }
     }

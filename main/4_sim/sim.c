@@ -200,9 +200,9 @@ uint8_t sim_start(void)
     LARGE_INTEGER frequency;
     uint32_t      noise = 0u;
 
-    /* Resolution comes from the sensor itself: the prescaler is the number of
-       counts per degree, so the samples follow whichever revision is fitted. */
-    sim_counts_per_degree = temp_sensor_get_prescaler();
+    /* Resolution comes from the sensor itself, so the samples follow whichever
+       revision is fitted. */
+    sim_counts_per_degree = temp_sensor_get_counts_per_deg();
 
     if (sim_counts_per_degree == 0u)
     {

@@ -22,6 +22,11 @@ _Static_assert(TIM1_PERIOD_US > 0u, "TIM1 period must be non-zero");
 _Static_assert(TIM0_RELOAD <= TIM_MAX_RELOAD, "TIM0 reload exceeds counter width");
 _Static_assert(TIM1_RELOAD <= TIM_MAX_RELOAD, "TIM1 reload exceeds counter width");
 
+/* Set by the TIM0 interrupt, cleared by whoever handles the 1 ms event. A
+   single byte, so the read and write are atomic and need no critical section. */
+static volatile uint8_t  tim0_1ms_flag   = 0u;
+static volatile uint32_t tim0_tick_count = 0u;
+
 static uint8_t tim_id_is_valid(uint8_t tim_id)
 {
     return (uint8_t)(tim_id < TIM_COUNT);
@@ -75,11 +80,6 @@ uint8_t tim_deinit(uint8_t tim_id)
 
     return TIM_OK;
 }
-
-/* Set by the TIM0 interrupt, cleared by whoever handles the 1 ms event. A
-   single byte, so the read and write are atomic and need no critical section. */
-static volatile uint8_t  tim0_1ms_flag   = 0u;
-static volatile uint32_t tim0_tick_count = 0u;
 
 void tim0_periodic_isr(void)
 {

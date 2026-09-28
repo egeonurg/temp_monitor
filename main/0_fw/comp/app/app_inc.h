@@ -1,32 +1,34 @@
 #ifndef APP_INC_H
 #define APP_INC_H
+
 #include <stdint.h>
 #include <stddef.h>
 
+#include "platform_assert.h"
+#include "platform_log.h"
+
+#include "app_cfg.h"
 #include "eeprom_ifa.h"
 #include "temp_sensor_ifa.h"
+#include "led_ifa.h"
 #include "tim_ifa.h"
 #include "adc_ifa.h"
 #include "dma_ifa.h"
-#include "platform_assert.h"
-#include "platform_log.h"
-#include "app_cfg.h"
-#include "led_ifa.h"
 
 /* Required interfaces, remapped to names this component owns. app.c uses only
    the APP_* names, so any provider below can be swapped or cut out without
    touching the implementation. */
 
-#define APP_EEPROM_OK                       EEPROM_READ_OK
-#define APP_READ_TEMP_SENSOR_REVISION(data) EEPROM_READ(EEPROM_TEMP_SENSOR_ADDRESS, data)
-#define APP_READ_SERIAL_NUMBER(data)        eeprom_read(EEPROM_SERIAL_NUMBER_ADDRESS, data, EEPROM_SERIAL_NUMBER_LENGTH)
+#define APP_EEPROM_OK                       EEPROM_OK
+#define APP_READ_TEMP_SENSOR_REVISION(data) EEPROM_READ(APP_EEPROM_TEMP_SENSOR_ADDRESS, data)
+#define APP_READ_SERIAL_NUMBER(data)        eeprom_read(APP_EEPROM_SERIAL_NUMBER_ADDRESS, data, APP_EEPROM_SERIAL_NUMBER_LENGTH)
 
 #define APP_TEMP_SENSOR_INIT(revision)      temp_sensor_init(revision)
 #define APP_TEMP_SENSOR_REVISION()          temp_sensor_get_revision()
-#define APP_TEMP_SENSOR_PRESCALER()         temp_sensor_get_prescaler()
+#define APP_TEMP_SENSOR_COUNTS_PER_DEG()    temp_sensor_get_counts_per_deg()
 #define APP_TEMP_SENSOR_BUFFER()            temp_sensor_get_buffer()
 #define APP_TEMP_SENSOR_BUFFER_SIZE()       temp_sensor_get_buffer_size()
-#define APP_TEMP_SENSOR_PROCESS(event)      temp_sensor_process_sample(event)
+#define APP_TEMP_SENSOR_PROCESS(event)      temp_sensor_process_half(event)
 #define APP_TEMP_SENSOR_HALF_TRANSFER       TEMP_SENSOR_HALF_TRANSFER_EVENT
 #define APP_TEMP_SENSOR_FULL_TRANSFER       TEMP_SENSOR_FULL_TRANSFER_EVENT
 #define APP_TEMP_SENSOR_OK                  TEMP_SENSOR_OK

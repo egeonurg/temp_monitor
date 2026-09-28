@@ -6,7 +6,7 @@ static uint16_t app_half_event_number = 0u;
 static uint16_t app_full_event_number = 0u;
 
 /* Placeholder only: read and reported, not used. +1 for the terminator. */
-static char app_serial_number[EEPROM_SERIAL_NUMBER_LENGTH + 1u] = {0};
+static char app_serial_number[APP_EEPROM_SERIAL_NUMBER_LENGTH + 1u] = {0};
 
 /* Called by the temp sensor on a condition change: shows it on the LEDs. */
 static void app_on_temp_condition(APP_TEMP_SENSOR_CONDITION_T condition)
@@ -37,9 +37,7 @@ void app_init(void)
     uint16_t *sample_buffer        = NULL;
     uint16_t  sample_buffer_size   = 0u;
 
-    uint16_t eeprom_status = APP_READ_TEMP_SENSOR_REVISION(&temp_sensor_revision);
-
-    if (eeprom_status != APP_EEPROM_OK)
+    if (APP_READ_TEMP_SENSOR_REVISION(&temp_sensor_revision) != APP_EEPROM_OK)
     {
         /* Without the revision the reading scale is unknown: trap rather
            than configure the sensor from a value that was never read. */
@@ -57,9 +55,9 @@ void app_init(void)
 
     APP_LOG("serial number %s\n", app_serial_number);
 
-    APP_LOG("temp sensor revision %u, prescaler %u\n",
+    APP_LOG("temp sensor revision %u, %u count(s) per degree\n",
            (unsigned int)APP_TEMP_SENSOR_REVISION(),
-           (unsigned int)APP_TEMP_SENSOR_PRESCALER());
+           (unsigned int)APP_TEMP_SENSOR_COUNTS_PER_DEG());
 
     /* LEDs before the callback: the first condition change must find the
        pins configured. */
