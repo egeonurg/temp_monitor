@@ -4,9 +4,9 @@
 /* Mock */
 uint8_t adc_init(void)
 {
-    ADC_LOG("init: %u bit, trigger source %u (timer event)\n",
-           (unsigned int)ADC_RESOLUTION_BITS,
-           (unsigned int)ADC_TRIGGER_SOURCE);
+    PLATFORM_LOG_TAG(ADC_LOG_TAG, "init: %u bit, trigger source %u (timer event)\n",
+                     (unsigned int)ADC_RESOLUTION_BITS,
+                     (unsigned int)ADC_TRIGGER_SOURCE);
 
     return ADC_OK;
 }
@@ -14,7 +14,7 @@ uint8_t adc_init(void)
 /* Mock */
 uint8_t adc_deinit(void)
 {
-    ADC_LOG("deinit\n");
+    PLATFORM_LOG_TAG(ADC_LOG_TAG, "deinit\n");
 
     return ADC_OK;
 }

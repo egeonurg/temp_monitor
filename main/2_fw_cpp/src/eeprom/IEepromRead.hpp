@@ -13,7 +13,6 @@ public:
                          uint16_t size) = 0;
     static constexpr uint8_t OK      = 0x00u;
     static constexpr uint8_t ERR     = 0x01u;
-    static constexpr uint8_t TIMEOUT = 0x02u;
 
 protected:
     IEepromRead()  = default;

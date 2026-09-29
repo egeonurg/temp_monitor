@@ -11,7 +11,6 @@
 #define TIM_MODE_INTERRUPT  0x00
 #define TIM_MODE_AD_TRIGGER 0x01
 
-#define TIM_LOG_TAG "#TIM_LOG "
-#define TIM_LOG(...)  PLATFORM_LOG(TIM_LOG_TAG __VA_ARGS__)
+#define TIM_LOG_TAG "TIM"
 
 #endif /* TIM_INC_H */

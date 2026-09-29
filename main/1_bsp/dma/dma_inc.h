@@ -12,7 +12,6 @@
 
 #define DMA_DSB() PLATFORM_DSB()
 
-#define DMA_LOG_TAG "#DMA_LOG "
-#define DMA_LOG(...)  PLATFORM_LOG(DMA_LOG_TAG __VA_ARGS__)
+#define DMA_LOG_TAG "DMA"
 
 #endif /* DMA_INC_H */

@@ -1,4 +1,4 @@
-#include "AppOrchestrator.hpp"
+#include "app_dat.hpp"
 
 #if defined(SIM_ENABLE)
 extern "C"
@@ -12,10 +12,10 @@ extern "C"
 #define MAIN_LOOP_RUNNING              true
 #endif
 
-static AppOrchestrator app;
-
 int main()
 {
+    AppOrchestrator &app = getApp();
+
     app.init();
 
     MAIN_SIM_START(app.getCountsPerDeg());

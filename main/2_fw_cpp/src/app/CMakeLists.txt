@@ -6,12 +6,13 @@ target_link_libraries(app_cpp
     PUBLIC
         adc_adapt
         dma_adapt
-        gpio_adapt
-        i2c_adapt
         tim_adapt
         eeprom_cpp
         led_cpp
+        temp_sensor_cpp
     PRIVATE
+        gpio_adapt
+        i2c_adapt
         platform
         project_warnings
 )

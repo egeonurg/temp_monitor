@@ -134,10 +134,10 @@ static DWORD WINAPI sim_thread(LPVOID argument)
         {
             logged_slot = slot;
 
-            SIM_LOG("%u ms: set point %u C -> %u counts\n",
-                   (unsigned int)((sim_sample_count * SIM_SAMPLE_PERIOD_US) / 1000u),
-                   (unsigned int)sim_setpoint_deg[slot],
-                   (unsigned int)(sim_setpoint_deg[slot] * sim_counts_per_degree));
+            PLATFORM_LOG_TAG(SIM_LOG_TAG, "%u ms: set point %u C -> %u counts\n",
+                             (unsigned int)((sim_sample_count * SIM_SAMPLE_PERIOD_US) / 1000u),
+                             (unsigned int)sim_setpoint_deg[slot],
+                             (unsigned int)(sim_setpoint_deg[slot] * sim_counts_per_degree));
         }
 
         /* TIM1 trigger -> A/D -> DMA */
@@ -155,18 +155,19 @@ static DWORD WINAPI sim_thread(LPVOID argument)
         }
     }
 
-    sim_running = 0u;
-
     dma_get_transfer_counts(&half_count, &full_count);
 
-    SIM_LOG("run finished: %u ms, %u tick(s), %u sample(s), "
-                   "%u half + %u full DMA interrupt(s), %u spike(s)\n",
-           (unsigned int)SIM_RUN_MS,
-           (unsigned int)sim_tick_count,
-           (unsigned int)sim_sample_count,
-           (unsigned int)half_count,
-           (unsigned int)full_count,
-           (unsigned int)sim_spike_count);
+    PLATFORM_LOG_TAG(SIM_LOG_TAG, "run finished: %u ms, %u tick(s), %u sample(s), "
+                     "%u half + %u full DMA interrupt(s), %u spike(s)\n",
+                     (unsigned int)SIM_RUN_MS,
+                     (unsigned int)sim_tick_count,
+                     (unsigned int)sim_sample_count,
+                     (unsigned int)half_count,
+                     (unsigned int)full_count,
+                     (unsigned int)sim_spike_count);
+
+    /* Last: main exits as soon as it sees this. */
+    sim_running = 0u;
 
     return 0;
 }
@@ -203,12 +204,12 @@ uint8_t sim_start(uint16_t counts_per_deg)
         {
             (void)CloseHandle(thread);
 
-            SIM_LOG("start: %u us sample / %u us tick for %u ms, "
-                    "%u count(s) per degree\n",
-                   (unsigned int)SIM_SAMPLE_PERIOD_US,
-                   (unsigned int)SIM_TICK_PERIOD_US,
-                   (unsigned int)SIM_RUN_MS,
-                   (unsigned int)sim_counts_per_degree);
+            PLATFORM_LOG_TAG(SIM_LOG_TAG, "start: %u us sample / %u us tick for %u ms, "
+                             "%u count(s) per degree\n",
+                             (unsigned int)SIM_SAMPLE_PERIOD_US,
+                             (unsigned int)SIM_TICK_PERIOD_US,
+                             (unsigned int)SIM_RUN_MS,
+                             (unsigned int)sim_counts_per_degree);
 
             ret = SIM_OK;
         }

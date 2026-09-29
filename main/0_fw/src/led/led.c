@@ -15,8 +15,6 @@ static const char * const led_name[LED_COUNT] =
     "YELLOW"
 };
 
-static uint8_t led_active = LED_DEFAULT_ACTIVE;
-
 uint8_t led_init(void)
 {
     uint8_t led_id = 0u;
@@ -26,9 +24,9 @@ uint8_t led_init(void)
         LED_GPIO_INIT(led_pin[led_id], LED_PIN_OUTPUT);
     }
 
-    LED_LOG("init: %u LEDs, default active %u\n",
-            (unsigned int)LED_COUNT,
-            (unsigned int)LED_DEFAULT_ACTIVE);
+    PLATFORM_LOG_TAG(LED_LOG_TAG, "init: %u LEDs, default active %u\n",
+                     (unsigned int)LED_COUNT,
+                     (unsigned int)LED_DEFAULT_ACTIVE);
 
     return led_set_active(LED_DEFAULT_ACTIVE);
 }
@@ -43,7 +41,7 @@ uint8_t led_deinit(void)
         LED_GPIO_DEINIT(led_pin[led_id], LED_PIN_OUTPUT);
     }
 
-    LED_LOG("deinit: all LEDs off\n");
+    PLATFORM_LOG_TAG(LED_LOG_TAG, "deinit: all LEDs off\n");
 
     return LED_OK;
 }
@@ -60,9 +58,7 @@ uint8_t led_set_active(uint8_t led_id)
             LED_GPIO_WRITE(led_pin[index], (index == led_id) ? LED_LEVEL_ON : LED_LEVEL_OFF);
         }
 
-        led_active = led_id;
-
-        LED_LOG("%s on\n", led_name[led_active]);
+        PLATFORM_LOG_TAG(LED_LOG_TAG, "%s on\n", led_name[led_id]);
 
         ret = LED_OK;
     }

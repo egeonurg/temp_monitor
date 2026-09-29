@@ -11,4 +11,7 @@
 #define PLATFORM_LOG(...) ((void)sizeof(printf(__VA_ARGS__)))
 #endif
 
+/* PLATFORM_LOG_TAG(ADC_LOG_TAG, "x %u\n", v) prints "#ADC_LOG x 5" */
+#define PLATFORM_LOG_TAG(tag, ...) PLATFORM_LOG("#" tag "_LOG " __VA_ARGS__)
+
 #endif /* PLATFORM_LOG_H */

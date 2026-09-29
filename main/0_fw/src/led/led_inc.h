@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+#include "platform_assert.h"
 #include "platform_log.h"
 
 #include "led_ifa.h"
@@ -14,7 +15,6 @@
 #define LED_GPIO_DEINIT(pin, direction) gpio_deinit(pin, direction)
 #define LED_GPIO_WRITE(pin, value)      gpio_write(pin, value)
 
-#define LED_LOG_TAG "#LED_LOG "
-#define LED_LOG(...) PLATFORM_LOG(LED_LOG_TAG __VA_ARGS__)
+#define LED_LOG_TAG "LED"
 
 #endif /* LED_INC_H */

@@ -3,7 +3,6 @@
 
 static_assert(IEepromRead::OK == II2c::OK, "IEepromRead::OK differs from I2C_OK");
 static_assert(IEepromRead::ERR == II2c::ERR, "IEepromRead::ERR differs from I2C_ERR");
-static_assert(IEepromRead::TIMEOUT == II2c::TIMEOUT, "IEepromRead::TIMEOUT differs from I2C_TIMEOUT");
 
 
 uint8_t EepromController::read(uint16_t reg_address,

@@ -59,9 +59,6 @@
 #define APP_TIM_GET_1MS_FLAG()              tim_get_1ms_flag()
 #define APP_TIM_CLEAR_1MS_FLAG()            tim_clear_1ms_flag()
 
-#define APP_ASSERT(condition, message)      PLATFORM_ASSERT(condition, message)
-
-#define APP_LOG_TAG "#APP_LOG "
-#define APP_LOG(...) PLATFORM_LOG(APP_LOG_TAG __VA_ARGS__)
+#define APP_LOG_TAG "APP"
 
 #endif /* APP_INC_H */

@@ -65,7 +65,7 @@ void temp_sensor_init(uint16_t revision)
             break;
 
         default:
-            TEMP_SENSOR_ASSERT(0, "Unknown temp sensor revision");
+            PLATFORM_ASSERT(0, "Unknown temp sensor revision");
             break;
     }
 }
@@ -117,9 +117,9 @@ static void temp_sensor_change_condition(temp_sensor_condition_t condition, uint
 {
     temp_sensor_condition = condition;
 
-    TEMP_SENSOR_LOG("condition -> %s at %u C\n",
-                    temp_sensor_condition_name[condition],
-                    (unsigned int)temp_deg);
+    PLATFORM_LOG_TAG(TEMP_SENSOR_LOG_TAG, "condition -> %s at %u C\n",
+                     temp_sensor_condition_name[condition],
+                     (unsigned int)temp_deg);
 
     temp_sensor_callback(condition);
 }
@@ -130,8 +130,8 @@ static void temp_sensor_evaluate_condition(uint16_t value)
 {
     uint16_t temp_deg = 0u;
 
-    TEMP_SENSOR_ASSERT(temp_sensor_counts_per_deg != 0u, "Counts per degree is zero");
-    TEMP_SENSOR_ASSERT(temp_sensor_callback != NULL, "Condition callback not registered");
+    PLATFORM_ASSERT(temp_sensor_counts_per_deg != 0u, "Counts per degree is zero");
+    PLATFORM_ASSERT(temp_sensor_callback != NULL, "Condition callback not registered");
 
     temp_deg = value / temp_sensor_counts_per_deg;
 
@@ -175,7 +175,7 @@ static void temp_sensor_evaluate_condition(uint16_t value)
             break;
 
         default:
-            TEMP_SENSOR_ASSERT(0, "Unknown condition");
+            PLATFORM_ASSERT(0, "Unknown condition");
             break;
     }
 }
@@ -195,7 +195,7 @@ void temp_sensor_process_half(temp_sensor_event_t event)
             break;
 
         default:
-            TEMP_SENSOR_ASSERT(0, "Invalid temp sensor event");
+            PLATFORM_ASSERT(0, "Invalid temp sensor event");
             break;
     }
 

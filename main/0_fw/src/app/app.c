@@ -23,7 +23,7 @@ static void app_on_temp_condition(APP_TEMP_SENSOR_CONDITION_T condition)
             break;
 
         default:
-            APP_ASSERT(0, "Unknown temp sensor condition");
+            PLATFORM_ASSERT(0, "Unknown temp sensor condition");
             break;
     }
 }
@@ -36,57 +36,57 @@ void app_init(void)
 
     if (APP_READ_TEMP_SENSOR_REVISION(&temp_sensor_revision) != APP_EEPROM_OK)
     {
-        APP_ASSERT(0, "Failed to read temp sensor revision from EEPROM");
+        PLATFORM_ASSERT(0, "Failed to read temp sensor revision from EEPROM");
     }
 
     APP_TEMP_SENSOR_INIT(temp_sensor_revision);
 
     if (APP_READ_SERIAL_NUMBER(app_serial_number) != APP_EEPROM_OK)
     {
-        APP_ASSERT(0, "Failed to read serial number from EEPROM");
+        PLATFORM_ASSERT(0, "Failed to read serial number from EEPROM");
     }
 
-    APP_LOG("serial number %s\n", app_serial_number);
+    PLATFORM_LOG_TAG(APP_LOG_TAG, "serial number %s\n", app_serial_number);
 
-    APP_LOG("temp sensor revision %u, %u count(s) per degree\n",
-           (unsigned int)APP_TEMP_SENSOR_REVISION(),
-           (unsigned int)APP_TEMP_SENSOR_COUNTS_PER_DEG());
+    PLATFORM_LOG_TAG(APP_LOG_TAG, "temp sensor revision %u, %u count(s) per degree\n",
+                     (unsigned int)APP_TEMP_SENSOR_REVISION(),
+                     (unsigned int)APP_TEMP_SENSOR_COUNTS_PER_DEG());
 
     /* LEDs must be ready before the first condition callback. */
     if (APP_LED_INIT() != APP_LED_OK)
     {
-        APP_ASSERT(0, "Failed to initialise the LEDs");
+        PLATFORM_ASSERT(0, "Failed to initialise the LEDs");
     }
 
     if (APP_TEMP_SENSOR_SET_CALLBACK(app_on_temp_condition) != APP_TEMP_SENSOR_OK)
     {
-        APP_ASSERT(0, "Failed to register the temp sensor callback");
+        PLATFORM_ASSERT(0, "Failed to register the temp sensor callback");
     }
 
     sample_buffer      = APP_TEMP_SENSOR_BUFFER();
     sample_buffer_size = APP_TEMP_SENSOR_BUFFER_SIZE();
 
-    APP_ASSERT(sample_buffer != NULL, "Failed to get temp sensor buffer");
+    PLATFORM_ASSERT(sample_buffer != NULL, "Failed to get temp sensor buffer");
 
     /* Init order: DMA, A/D, then the timers that start everything. */
     if (APP_DMA_INIT(sample_buffer, sample_buffer_size) != APP_DMA_OK)
     {
-        APP_ASSERT(0, "Failed to initialise the A/D sample DMA");
+        PLATFORM_ASSERT(0, "Failed to initialise the A/D sample DMA");
     }
 
     if (APP_ADC_INIT() != APP_ADC_OK)
     {
-        APP_ASSERT(0, "Failed to initialise the A/D converter");
+        PLATFORM_ASSERT(0, "Failed to initialise the A/D converter");
     }
 
     if (APP_TIM_INIT(APP_TIM_1MS_BASE) != APP_TIM_OK)
     {
-        APP_ASSERT(0, "Failed to initialise the 1 ms system tick timer");
+        PLATFORM_ASSERT(0, "Failed to initialise the 1 ms system tick timer");
     }
 
     if (APP_TIM_INIT(APP_TIM_AD_TRIGGER) != APP_TIM_OK)
     {
-        APP_ASSERT(0, "Failed to initialise the A/D trigger timer");
+        PLATFORM_ASSERT(0, "Failed to initialise the A/D trigger timer");
     }
 }
 
@@ -120,7 +120,8 @@ void app_handle_1ms_event(void)
 
         if (missed > 1u)
         {
-            APP_LOG("Missed %u half transfer event(s)\n", (unsigned int)(missed - 1u));
+            PLATFORM_LOG_TAG(APP_LOG_TAG, "Missed %u half transfer event(s)\n",
+                             (unsigned int)(missed - 1u));
         }
 
         APP_TEMP_SENSOR_PROCESS(APP_TEMP_SENSOR_HALF_TRANSFER);
@@ -134,7 +135,8 @@ void app_handle_1ms_event(void)
 
         if (missed > 1u)
         {
-            APP_LOG("Missed %u full transfer event(s)\n", (unsigned int)(missed - 1u));
+            PLATFORM_LOG_TAG(APP_LOG_TAG, "Missed %u full transfer event(s)\n",
+                             (unsigned int)(missed - 1u));
         }
 
         APP_TEMP_SENSOR_PROCESS(APP_TEMP_SENSOR_FULL_TRANSFER);

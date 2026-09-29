@@ -30,22 +30,22 @@ uint8_t tim_init(uint8_t tim_id)
 
     if (tim_id < TIM_COUNT)
     {
-        TIM_LOG("TIM%u init: reload %u ticks, period %u us @ %u Hz\n",
-               (unsigned int)tim_id,
-               (unsigned int)tim_config[tim_id].reload,
-               (unsigned int)tim_config[tim_id].period_us,
-               (unsigned int)TIM_CLOCK_HZ);
+        PLATFORM_LOG_TAG(TIM_LOG_TAG, "TIM%u init: reload %u ticks, period %u us @ %u Hz\n",
+                         (unsigned int)tim_id,
+                         (unsigned int)tim_config[tim_id].reload,
+                         (unsigned int)tim_config[tim_id].period_us,
+                         (unsigned int)TIM_CLOCK_HZ);
 
         if (tim_config[tim_id].mode == TIM_MODE_AD_TRIGGER)
         {
-            TIM_LOG("TIM%u update event routed to A/D trigger\n",
-                   (unsigned int)tim_id);
+            PLATFORM_LOG_TAG(TIM_LOG_TAG, "TIM%u update event routed to A/D trigger\n",
+                             (unsigned int)tim_id);
         }
         else
         {
-            TIM_LOG("TIM%u update interrupt enabled (%u us period)\n",
-                   (unsigned int)tim_id,
-                   (unsigned int)tim_config[tim_id].period_us);
+            PLATFORM_LOG_TAG(TIM_LOG_TAG, "TIM%u update interrupt enabled (%u us period)\n",
+                             (unsigned int)tim_id,
+                             (unsigned int)tim_config[tim_id].period_us);
         }
 
         ret = TIM_OK;
@@ -61,7 +61,7 @@ uint8_t tim_deinit(uint8_t tim_id)
 
     if (tim_id < TIM_COUNT)
     {
-        TIM_LOG("TIM%u deinit\n", (unsigned int)tim_id);
+        PLATFORM_LOG_TAG(TIM_LOG_TAG, "TIM%u deinit\n", (unsigned int)tim_id);
 
         ret = TIM_OK;
     }
@@ -76,9 +76,9 @@ void tim0_periodic_isr(void)
 
     if ((tim0_tick_count % TIM0_LOG_INTERVAL) == 0u)
     {
-        TIM_LOG("TIM0 interrupt %u (%u ms elapsed)\n",
-               (unsigned int)tim0_tick_count,
-               (unsigned int)(tim0_tick_count * TIM0_PERIOD_MS));
+        PLATFORM_LOG_TAG(TIM_LOG_TAG, "TIM0 interrupt %u (%u ms elapsed)\n",
+                         (unsigned int)tim0_tick_count,
+                         (unsigned int)(tim0_tick_count * TIM0_PERIOD_MS));
     }
 }
 

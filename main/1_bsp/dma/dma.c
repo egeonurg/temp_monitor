@@ -24,10 +24,10 @@ uint8_t dma_init(uint16_t *buffer, uint16_t size)
         dma_half_count = 0u;
         dma_full_count = 0u;
 
-        DMA_LOG("init: %u samples, half %u, request source %u\n",
-               (unsigned int)dma_size,
-               (unsigned int)dma_half_size,
-               (unsigned int)DMA_REQUEST_SOURCE);
+        PLATFORM_LOG_TAG(DMA_LOG_TAG, "init: %u samples, half %u, request source %u\n",
+                         (unsigned int)dma_size,
+                         (unsigned int)dma_half_size,
+                         (unsigned int)DMA_REQUEST_SOURCE);
 
         ret = DMA_OK;
     }
@@ -43,7 +43,7 @@ uint8_t dma_deinit(void)
     dma_half_size = 0u;
     dma_index     = 0u;
 
-    DMA_LOG("deinit\n");
+    PLATFORM_LOG_TAG(DMA_LOG_TAG, "deinit\n");
 
     return DMA_OK;
 }

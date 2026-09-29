@@ -2,22 +2,42 @@
 
 #include <cstdint>
 
+#include "iadc.hpp"
+#include "idma.hpp"
+#include "itimer.hpp"
+#include "IEepromRead.hpp"
+#include "ILedController.hpp"
+#include "ITempController.hpp"
+
 class AppOrchestrator
 {
 public:
-    AppOrchestrator()=default;
+    AppOrchestrator(IEepromRead &eepromIfa, ILedController &ledIfa, ITempController &tempSensorIfa,
+                    IDma &dmaIfa, IAdc &adcIfa, ITimer &adTriggerTimerIfa, ITickTimer &tickTimerIfa)
+        : eeprom(eepromIfa), led(ledIfa), tempSensor(tempSensorIfa),
+          dma(dmaIfa), adc(adcIfa), adTriggerTimer(adTriggerTimerIfa), tickTimer(tickTimerIfa) {}
+
     ~AppOrchestrator()=default;
 
     void init();
     void performServices();
 
-    uint16_t getCountsPerDeg() const { return countsPerDeg; }
+    uint16_t getCountsPerDeg() const;
 
 private:
-    static constexpr uint16_t SAMPLE_COUNT = 200u;
+    void updateLeds();
 
-    uint16_t countsPerDeg = 1u;
+    IEepromRead     &eeprom;
+    ILedController  &led;
+    ITempController &tempSensor;
+    IDma            &dma;
+    IAdc            &adc;
+    ITimer          &adTriggerTimer;
+    ITickTimer      &tickTimer;
+
     uint16_t halfEventNumber = 0u;
     uint16_t fullEventNumber = 0u;
-    uint16_t sampleBuffer[SAMPLE_COUNT] = {0};
+
+    /* The LEDs start green */
+    ITempController::Condition shownCondition = ITempController::Condition::NORMAL;
 };
