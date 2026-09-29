@@ -1,9 +1,9 @@
-# Layers are added bottom-up: platform sits below the BSP, which knows nothing
-# about the firmware above it.
 add_subdirectory(platform)
 add_subdirectory(1_bsp)
+add_subdirectory(3_bsp_adapt)
 add_subdirectory(0_fw)
+add_subdirectory(2_fw_cpp)
 
 if(SIM_ENABLE)
-    add_subdirectory(4_sim)
+    add_subdirectory(6_sim)
 endif()

@@ -1,6 +1,0 @@
-add_library(temp_sensor STATIC temp_sensor.c)
-
-target_include_directories(temp_sensor PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-
-# platform only: this driver has no peer dependencies.
-target_link_libraries(temp_sensor PRIVATE platform project_warnings)

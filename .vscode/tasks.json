@@ -2,12 +2,21 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build (Debug)",
+            "label": "build C (Debug)",
             "type": "shell",
-            "command": "${workspaceFolder}\\main\\3_bat\\build.bat",
+            "command": "${workspaceFolder}\\main\\5_bat\\build_c.bat",
             "args": ["Debug"],
             "options": { "shell": { "executable": "cmd.exe", "args": ["/d", "/c"] } },
             "group": { "kind": "build", "isDefault": true },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "build C++ (Debug)",
+            "type": "shell",
+            "command": "${workspaceFolder}\\main\\5_bat\\build_cpp.bat",
+            "args": ["Debug"],
+            "options": { "shell": { "executable": "cmd.exe", "args": ["/d", "/c"] } },
+            "group": "build",
             "problemMatcher": ["$gcc"]
         }
     ]

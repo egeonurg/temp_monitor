@@ -1,10 +1,9 @@
 #include "adc_ifa.h"
 #include "adc_inc.h"
 
+/* Mock */
 uint8_t adc_init(void)
 {
-    /* Mock: on target this powers up the converter, programs the resolution
-       and selects the timer trigger event as the conversion start source. */
     ADC_LOG("init: %u bit, trigger source %u (timer event)\n",
            (unsigned int)ADC_RESOLUTION_BITS,
            (unsigned int)ADC_TRIGGER_SOURCE);
@@ -12,11 +11,10 @@ uint8_t adc_init(void)
     return ADC_OK;
 }
 
+/* Mock */
 uint8_t adc_deinit(void)
 {
-    /* Mock: on target this releases the trigger input and powers the
-       converter down. */
-    ADC_LOG("deinit: trigger released, converter powered down\n");
+    ADC_LOG("deinit\n");
 
     return ADC_OK;
 }

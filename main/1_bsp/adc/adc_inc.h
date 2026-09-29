@@ -8,8 +8,6 @@
 #include "adc_ifa.h"
 #include "adc_cfg.h"
 
-/* Logging for this component: the tag is prefixed to every message, and the
-   whole thing disappears on a target build. */
 #define ADC_LOG_TAG "#ADC_LOG "
 #define ADC_LOG(...)  PLATFORM_LOG(ADC_LOG_TAG __VA_ARGS__)
 

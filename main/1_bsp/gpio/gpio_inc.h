@@ -7,8 +7,6 @@
 
 #include "gpio_ifa.h"
 
-/* Logging for this component: the tag is prefixed to every message, and the
-   whole thing disappears on a target build. */
 #define GPIO_LOG_TAG "#GPIO_LOG "
 #define GPIO_LOG(...)  PLATFORM_LOG(GPIO_LOG_TAG __VA_ARGS__)
 

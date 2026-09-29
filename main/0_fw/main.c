@@ -1,11 +1,8 @@
 #include "app_ifa.h"
 
-/* On a host build the interrupts are raised by the simulator; on target they
-   come from the hardware and the superloop never exits. Either way they are
-   handled inside the drivers, and only the 1 ms event flag reaches here. */
 #if defined(SIM_ENABLE)
 #include "sim_ifa.h"
-#define MAIN_SIM_START()  ((void)sim_start())
+#define MAIN_SIM_START()  ((void)sim_start(app_get_counts_per_deg()))
 #define MAIN_LOOP_RUNNING (sim_is_running() != 0u)
 #else
 #define MAIN_SIM_START()  ((void)0)

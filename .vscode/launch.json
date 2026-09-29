@@ -12,7 +12,23 @@
             "externalConsole": false,
             "MIMode": "gdb",
             "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
-            "preLaunchTask": "build (Debug)",
+            "preLaunchTask": "build C (Debug)",
+            "setupCommands": [
+                { "description": "Pretty printing", "text": "-enable-pretty-printing", "ignoreFailures": true }
+            ]
+        },
+        {
+            "name": "Debug TempSensorFwCpp (gdb)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\build\\bin\\TempSensorFwCpp.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
+            "preLaunchTask": "build C++ (Debug)",
             "setupCommands": [
                 { "description": "Pretty printing", "text": "-enable-pretty-printing", "ignoreFailures": true }
             ]

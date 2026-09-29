@@ -9,101 +9,91 @@ static uint16_t  dma_index     = 0u;
 static volatile uint32_t dma_half_count = 0u;
 static volatile uint32_t dma_full_count = 0u;
 
+/* Mock */
 uint8_t dma_init(uint16_t *buffer, uint16_t size)
 {
-    if ((buffer == NULL) || (size < 2u) || ((size % 2u) != 0u))
+    uint8_t ret = DMA_ERR;
+
+    if ((buffer != NULL) && (size >= 2u) && ((size % 2u) == 0u))
     {
-        return DMA_ERR;
+        dma_buffer    = buffer;
+        dma_size      = size;
+        dma_half_size = (uint16_t)(size / 2u);
+        dma_index     = 0u;
+
+        dma_half_count = 0u;
+        dma_full_count = 0u;
+
+        DMA_LOG("init: %u samples, half %u, request source %u\n",
+               (unsigned int)dma_size,
+               (unsigned int)dma_half_size,
+               (unsigned int)DMA_REQUEST_SOURCE);
+
+        ret = DMA_OK;
     }
 
-    dma_buffer    = buffer;
-    dma_size      = size;
-    dma_half_size = (uint16_t)(size / 2u);
-    dma_index     = 0u;
-
-    dma_half_count = 0u;
-    dma_full_count = 0u;
-
-    /* Mock: on target this programs the peripheral and memory addresses, the
-       transfer count and the request source, enables the half and full
-       transfer interrupts, then enables the channel. */
-    DMA_LOG("init: %u samples of %u byte(s), half %u, request source %u\n",
-           (unsigned int)dma_size,
-           (unsigned int)sizeof(uint16_t),
-           (unsigned int)dma_half_size,
-           (unsigned int)DMA_REQUEST_SOURCE);
-
-    return DMA_OK;
+    return ret;
 }
 
+/* Mock */
 uint8_t dma_deinit(void)
 {
-    /* Mock: on target this disables the channel and its interrupts, and clears
-       the flags before the buffer reference is dropped. */
     dma_buffer    = NULL;
     dma_size      = 0u;
     dma_half_size = 0u;
     dma_index     = 0u;
 
-    DMA_LOG("deinit: channel disabled, buffer released\n");
+    DMA_LOG("deinit\n");
 
     return DMA_OK;
 }
 
 void dma_half_transfer_isr(void)
 {
-    if (dma_buffer == NULL)
+    if (dma_buffer != NULL)
     {
-        return;
+        /* Complete all prior memory accesses before publishing the count. */
+        DMA_DSB();
+        dma_half_count++;
     }
-
-    dma_half_count++;
 }
 
 void dma_full_transfer_isr(void)
 {
-    if (dma_buffer == NULL)
+    if (dma_buffer != NULL)
     {
-        return;
+        /* Complete all prior memory accesses before publishing the count. */
+        DMA_DSB();
+        dma_full_count++;
     }
-
-    dma_full_count++;
 }
 
 void dma_get_transfer_counts(uint32_t *half, uint32_t *full)
 {
-    if ((half == NULL) || (full == NULL))
+    if ((half != NULL) && (full != NULL))
     {
-        return;
+        *half = dma_half_count;
+        *full = dma_full_count;
     }
-
-    *half = dma_half_count;
-    *full = dma_full_count;
 }
 
 #if defined(SIM_ENABLE)
 void dma_mock_sample(uint16_t sample)
 {
-    if (dma_buffer == NULL)
+    if (dma_buffer != NULL)
     {
-        return;
-    }
+        dma_buffer[dma_index] = sample;
+        dma_index = (uint16_t)(dma_index + 1u);
 
-    dma_buffer[dma_index] = sample;
-    dma_index = (uint16_t)(dma_index + 1u);
-
-    if (dma_index == dma_half_size)
-    {
-        dma_half_transfer_isr();
-    }
-    else if (dma_index >= dma_size)
-    {
-        dma_index = 0u;
-        dma_full_transfer_isr();
-    }
-    else
-    {
-        /* Transfer still in progress. */
+        if (dma_index == dma_half_size)
+        {
+            dma_half_transfer_isr();
+        }
+        else if (dma_index >= dma_size)
+        {
+            dma_index = 0u;
+            dma_full_transfer_isr();
+        }
     }
 }
 #endif
