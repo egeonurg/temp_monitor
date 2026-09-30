@@ -2,8 +2,6 @@
 
 #include <cstdint>
 
-class II2c; // Forward declaration, since interface is reference
-
 /* Eeprom Read Interface */
 class IEepromRead
 {

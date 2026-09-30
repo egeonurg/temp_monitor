@@ -1,4 +1,5 @@
 #include "app_dat.hpp"
+#include "AppOrchestrator.hpp"
 
 #include "adc.hpp"
 #include "dma.hpp"

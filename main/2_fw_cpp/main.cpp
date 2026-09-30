@@ -1,4 +1,5 @@
 #include "app_dat.hpp"
+#include "AppOrchestrator.hpp"
 
 #if defined(SIM_ENABLE)
 extern "C"

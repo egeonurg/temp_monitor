@@ -2,6 +2,8 @@
 
 #include "IEepromRead.hpp"
 
+class II2c; // Forward declaration, since interface is reference
+
 /* I2C address of the EEPROM device. */
 
 

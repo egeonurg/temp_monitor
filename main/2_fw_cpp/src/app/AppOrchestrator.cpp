@@ -1,5 +1,11 @@
 #include "AppOrchestrator.hpp"
 
+#include "iadc.hpp"
+#include "idma.hpp"
+#include "itimer.hpp"
+#include "IEepromRead.hpp"
+#include "ILedController.hpp"
+
 #include "platform_assert.h"
 #include "platform_log.h"
 

@@ -2,12 +2,16 @@
 
 #include <cstdint>
 
-#include "iadc.hpp"
-#include "idma.hpp"
-#include "itimer.hpp"
-#include "IEepromRead.hpp"
-#include "ILedController.hpp"
+/* Needed in full for the nested Condition type */
 #include "ITempController.hpp"
+
+/* Forward declarations, since interfaces are references */
+class IAdc;
+class IDma;
+class ITimer;
+class ITickTimer;
+class IEepromRead;
+class ILedController;
 
 class AppOrchestrator
 {
