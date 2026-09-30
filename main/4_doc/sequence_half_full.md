@@ -42,11 +42,13 @@ sequenceDiagram
         MAIN->>APP: app_get_1ms_flag() != 0
         MAIN->>APP: app_clear_1ms_flag()
         MAIN->>APP: app_handle_1ms_event()
-        APP->>DMA: dma_get_half_event_number()
-        DMA-->>APP: count (changed since last tick)
-        APP->>TS: temp_sensor_process_half(HALF_TRANSFER_EVENT)
-        TS->>TS: temp_sensor_filtered_average(&buffer[0])<br/>20 × median of 5 → average
-        TS->>TS: temp_sensor_evaluate_condition(avg)<br/>temp_deg = avg / counts_per_deg
+        APP->>DMA: half + full event numbers
+        DMA-->>APP: count (changed since last tick, odd → first half)
+        APP->>TS: temp_sensor_filter_half(HALF_TRANSFER_EVENT)
+        TS-->>APP: avg of 20 × median of 5 over &buffer[0]
+        APP->>DMA: event numbers again
+        Note over APP: changed → DMA is back in this half: drop (torn read)
+        APP->>TS: temp_sensor_evaluate(avg)<br/>temp_deg = avg / counts_per_deg
 
         alt condition changed (e.g. NORMAL → WARNING at ≥ 85 °C)
             TS->>TS: temp_sensor_change_condition()<br/>state = WARNING, log

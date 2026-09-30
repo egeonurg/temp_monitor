@@ -15,6 +15,9 @@ public:
 
     virtual void init() = 0;
 
+    /* No measurement, no indication */
+    virtual void allOff() = 0;
+
     virtual void setActive(Color color) = 0;
 
 protected:

@@ -11,6 +11,4 @@
 
 #define LED_PIN_OUTPUT 0x01u
 
-#define LED_DEFAULT_ACTIVE LED_GREEN
-
 #endif /* LED_CFG_H */

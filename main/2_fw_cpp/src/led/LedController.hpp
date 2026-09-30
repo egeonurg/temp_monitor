@@ -11,6 +11,7 @@ public:
         : greenPin(green), yellowPin(yellow), redPin(red) {}
 
     void init() override;
+    void allOff() override;
     void setActive(Color color) override;
 
 private:

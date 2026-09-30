@@ -11,6 +11,8 @@
 #include "LedController.hpp"
 #include "TempController.hpp"
 
+#include "platform_assert.h"
+
 static constexpr uint8_t LED_GREEN_PIN  = 0x0Au;
 static constexpr uint8_t LED_RED_PIN    = 0x0Bu;
 static constexpr uint8_t LED_YELLOW_PIN = 0x0Cu;
@@ -34,6 +36,12 @@ static TempController   tempSensor;
 
 /* App */
 static AppOrchestrator app{eeprom, led, tempSensor, dma, adc, adTriggerTimer, tickTimer};
+
+/* Called by PLATFORM_ASSERT before it traps */
+extern "C" void platform_safe_state(void)
+{
+    led.allOff();
+}
 
 AppOrchestrator &getApp()
 {

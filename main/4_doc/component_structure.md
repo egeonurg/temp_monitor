@@ -82,9 +82,8 @@ addresses, resolutions, log intervals. Private to the component.
 
 ```c
 /* tim_cfg.h */
-#define TIM_CLOCK_HZ   48000000u
-#define TIM0_PERIOD_MS 1u
-#define TIM0_RELOAD    TIM_RELOAD_FROM_US(TIM0_PERIOD_US)
+#define TIM0_PERIOD_US 1000u   /* 1 ms system tick   */
+#define TIM1_PERIOD_US 100u    /* 100 us A/D trigger */
 ```
 
 Configuration belongs to whoever owns the concept, not to whoever reads it:

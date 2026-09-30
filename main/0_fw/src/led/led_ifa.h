@@ -15,6 +15,9 @@ extern uint8_t led_init(void);
 
 extern uint8_t led_deinit(void);
 
+/* All LEDs off: no measurement, no indication. */
+extern uint8_t led_all_off(void);
+
 /* Lights the given LED and turns the other two off. */
 extern uint8_t led_set_active(uint8_t led_id);
 

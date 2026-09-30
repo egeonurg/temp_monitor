@@ -23,7 +23,16 @@ void LedController::init()
     yellowPin.init();
     redPin.init();
 
-    setActive(Color::GREEN);
+    allOff();
+}
+
+void LedController::allOff()
+{
+    greenPin.write(LED_OFF);
+    yellowPin.write(LED_OFF);
+    redPin.write(LED_OFF);
+
+    PLATFORM_LOG_TAG(LED_LOG_TAG, "all off\n");
 }
 
 void LedController::setActive(Color color)

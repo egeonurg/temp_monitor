@@ -39,9 +39,9 @@ private:
     ITimer          &adTriggerTimer;
     ITickTimer      &tickTimer;
 
-    uint16_t halfEventNumber = 0u;
-    uint16_t fullEventNumber = 0u;
+    /* Half + full transfer events handled so far */
+    uint16_t eventNumber = 0u;
 
-    /* The LEDs start green */
-    ITempController::Condition shownCondition = ITempController::Condition::NORMAL;
+    /* The LEDs start off, matching the sensor's NONE */
+    ITempController::Condition shownCondition = ITempController::Condition::NONE;
 };

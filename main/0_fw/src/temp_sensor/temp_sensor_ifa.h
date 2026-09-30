@@ -22,6 +22,7 @@ typedef enum
     TEMP_SENSOR_CONDITION_NORMAL   = 0u,
     TEMP_SENSOR_CONDITION_WARNING  = 1u,
     TEMP_SENSOR_CONDITION_CRITICAL = 2u,
+    TEMP_SENSOR_CONDITION_NONE     = 3u,   /* no measurement yet */
     TEMP_SENSOR_CONDITION_COUNT
 } temp_sensor_condition_t;
 
@@ -37,7 +38,11 @@ extern uint16_t *temp_sensor_get_buffer(void);
 
 extern uint16_t temp_sensor_get_buffer_size(void);
 
-extern void temp_sensor_process_half(temp_sensor_event_t event);
+/* Filtered value of the half the event reports, in A/D counts. */
+extern uint16_t temp_sensor_filter_half(temp_sensor_event_t event);
+
+/* Runs the condition state machine on a filtered value. */
+extern void temp_sensor_evaluate(uint16_t value);
 
 extern uint8_t temp_sensor_set_condition_callback(temp_sensor_callback_t callback);
 

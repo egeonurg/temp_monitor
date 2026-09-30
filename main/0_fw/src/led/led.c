@@ -24,11 +24,23 @@ uint8_t led_init(void)
         LED_GPIO_INIT(led_pin[led_id], LED_PIN_OUTPUT);
     }
 
-    PLATFORM_LOG_TAG(LED_LOG_TAG, "init: %u LEDs, default active %u\n",
-                     (unsigned int)LED_COUNT,
-                     (unsigned int)LED_DEFAULT_ACTIVE);
+    PLATFORM_LOG_TAG(LED_LOG_TAG, "init: %u LEDs\n", (unsigned int)LED_COUNT);
 
-    return led_set_active(LED_DEFAULT_ACTIVE);
+    return led_all_off();
+}
+
+uint8_t led_all_off(void)
+{
+    uint8_t led_id = 0u;
+
+    for (led_id = 0u; led_id < LED_COUNT; led_id++)
+    {
+        LED_GPIO_WRITE(led_pin[led_id], LED_LEVEL_OFF);
+    }
+
+    PLATFORM_LOG_TAG(LED_LOG_TAG, "all off\n");
+
+    return LED_OK;
 }
 
 uint8_t led_deinit(void)

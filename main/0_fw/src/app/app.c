@@ -1,8 +1,8 @@
 #include "app_ifa.h"
 #include "app_inc.h"
 
-static uint16_t app_half_event_number = 0u;
-static uint16_t app_full_event_number = 0u;
+/* Half + full transfer events handled so far */
+static uint16_t app_event_number = 0u;
 
 static char app_serial_number[APP_EEPROM_SERIAL_NUMBER_LENGTH + 1u] = {0};
 
@@ -26,6 +26,12 @@ static void app_on_temp_condition(APP_TEMP_SENSOR_CONDITION_T condition)
             PLATFORM_ASSERT(0, "Unknown temp sensor condition");
             break;
     }
+}
+
+/* Called by PLATFORM_ASSERT before it traps. */
+void platform_safe_state(void)
+{
+    (void)APP_LED_ALL_OFF();
 }
 
 void app_init(void)
@@ -107,38 +113,40 @@ void app_clear_1ms_flag(void)
 
 void app_handle_1ms_event(void)
 {
-    uint16_t half_event_number = APP_DMA_HALF_EVENT_NUMBER();
-    uint16_t full_event_number = APP_DMA_FULL_EVENT_NUMBER();
-    uint16_t missed            = 0u;
+    uint16_t event_number = APP_DMA_EVENT_NUMBER();
+    uint16_t new_events   = (uint16_t)(event_number - app_event_number);
+    uint16_t value = 0u;
+    APP_TEMP_SENSOR_EVENT_T event = APP_TEMP_SENSOR_FULL_TRANSFER;
 
-    /* uint16_t subtraction handles counter wrap-around. */
-    missed = (uint16_t)(half_event_number - app_half_event_number);
-
-    if (missed != 0u)
+    if (new_events != 0u)
     {
-        app_half_event_number = half_event_number;
+        app_event_number = event_number;
 
-        if (missed > 1u)
+        /* The DMA alternates half, full, half, ... so an odd count means the
+           first half was filled last. uint16_t wrap-around keeps the parity. */
+        if ((event_number % 2u) != 0u)
         {
-            PLATFORM_LOG_TAG(APP_LOG_TAG, "Missed %u half transfer event(s)\n",
-                             (unsigned int)(missed - 1u));
+            event = APP_TEMP_SENSOR_HALF_TRANSFER;
         }
 
-        APP_TEMP_SENSOR_PROCESS(APP_TEMP_SENSOR_HALF_TRANSFER);
-    }
-
-    missed = (uint16_t)(full_event_number - app_full_event_number);
-
-    if (missed != 0u)
-    {
-        app_full_event_number = full_event_number;
-
-        if (missed > 1u)
+        /* Only the latest half is still intact, older ones are being overwritten. */
+        if (new_events > 1u)
         {
-            PLATFORM_LOG_TAG(APP_LOG_TAG, "Missed %u full transfer event(s)\n",
-                             (unsigned int)(missed - 1u));
+            PLATFORM_LOG_TAG(APP_LOG_TAG, "Overrun: skipped %u half buffer(s)\n",
+                             (unsigned int)(new_events - 1u));
         }
 
-        APP_TEMP_SENSOR_PROCESS(APP_TEMP_SENSOR_FULL_TRANSFER);
+        value = APP_TEMP_SENSOR_FILTER(event);
+
+        /* The next event means the DMA is writing into this half again, so
+           the value may mix old and new samples: drop it. */
+        if (APP_DMA_EVENT_NUMBER() == event_number)
+        {
+            APP_TEMP_SENSOR_EVALUATE(value);
+        }
+        else
+        {
+            PLATFORM_LOG_TAG(APP_LOG_TAG, "Torn read: half buffer dropped\n");
+        }
     }
 }

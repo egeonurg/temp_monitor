@@ -9,7 +9,8 @@ public:
     ~TempController()=default;
 
     void init(uint16_t revision) override;
-    void processHalfEvent(Event event) override;
+    uint16_t filterHalf(Event event) const override;
+    void evaluate(uint16_t value) override;
 
     Condition getCondition() const override { return sensorCondition; }
     uint16_t getCountsPerDeg() const override { return sensorCountPerDegree; }
@@ -35,9 +36,8 @@ private:
     static uint16_t medianFilter5(const uint16_t *buffer);
     uint32_t generateFilteredAverage(const uint16_t *halfBuffer) const;
     void changeCondition(Condition condition, uint16_t tempDeg);
-    void evaluateCondition(uint16_t value);
 
-    Condition sensorCondition      = Condition::NORMAL;
+    Condition sensorCondition      = Condition::NONE;
     uint16_t  sensorCountPerDegree = REVISION_A_COUNTS_PER_DEG;
 
     /* Written by the DMA */

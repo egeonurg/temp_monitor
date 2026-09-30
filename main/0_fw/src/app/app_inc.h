@@ -26,7 +26,9 @@
 #define APP_TEMP_SENSOR_COUNTS_PER_DEG()    temp_sensor_get_counts_per_deg()
 #define APP_TEMP_SENSOR_BUFFER()            temp_sensor_get_buffer()
 #define APP_TEMP_SENSOR_BUFFER_SIZE()       temp_sensor_get_buffer_size()
-#define APP_TEMP_SENSOR_PROCESS(event)      temp_sensor_process_half(event)
+#define APP_TEMP_SENSOR_FILTER(event)       temp_sensor_filter_half(event)
+#define APP_TEMP_SENSOR_EVALUATE(value)     temp_sensor_evaluate(value)
+#define APP_TEMP_SENSOR_EVENT_T             temp_sensor_event_t
 #define APP_TEMP_SENSOR_HALF_TRANSFER       TEMP_SENSOR_HALF_TRANSFER_EVENT
 #define APP_TEMP_SENSOR_FULL_TRANSFER       TEMP_SENSOR_FULL_TRANSFER_EVENT
 #define APP_TEMP_SENSOR_OK                  TEMP_SENSOR_OK
@@ -40,14 +42,14 @@
 #define APP_LED_OK                          LED_OK
 #define APP_LED_INIT()                      led_init()
 #define APP_LED_SET_ACTIVE(led_id)          led_set_active(led_id)
+#define APP_LED_ALL_OFF()                   led_all_off()
 #define APP_LED_NORMAL                      LED_GREEN
 #define APP_LED_WARNING                     LED_YELLOW
 #define APP_LED_CRITICAL                    LED_RED
 
 #define APP_DMA_OK                          DMA_OK
 #define APP_DMA_INIT(buffer, size)          dma_init(buffer, size)
-#define APP_DMA_HALF_EVENT_NUMBER()         dma_get_half_event_number()
-#define APP_DMA_FULL_EVENT_NUMBER()         dma_get_full_event_number()
+#define APP_DMA_EVENT_NUMBER()              ((uint16_t)(dma_get_half_event_number() + dma_get_full_event_number()))
 
 #define APP_ADC_OK                          ADC_OK
 #define APP_ADC_INIT()                      adc_init()

@@ -16,7 +16,8 @@ public:
     {
         NORMAL,
         WARNING,
-        CRITICAL
+        CRITICAL,
+        NONE    /* no measurement yet */
     };
 
     /* Revision values stored in the EEPROM */
@@ -24,7 +25,10 @@ public:
     static constexpr uint16_t REVISION_B = 0x0001u;
 
     virtual void init(uint16_t revision) = 0;
-    virtual void processHalfEvent(Event event) = 0;
+    /* Filtered value of the half the event reports, in A/D counts */
+    virtual uint16_t filterHalf(Event event) const = 0;
+    /* Runs the condition state machine on a filtered value */
+    virtual void evaluate(uint16_t value) = 0;
 
     virtual Condition getCondition() const = 0;
     virtual uint16_t getCountsPerDeg() const = 0;

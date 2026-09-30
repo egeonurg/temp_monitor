@@ -9,7 +9,8 @@ static const char * const CONDITION_NAME[] =
 {
     "NORMAL",
     "WARNING",
-    "CRITICAL"
+    "CRITICAL",
+    "NONE"
 };
 
 void TempController::init(uint16_t revision)
@@ -30,7 +31,7 @@ void TempController::init(uint16_t revision)
     }
 }
 
-void TempController::processHalfEvent(Event event)
+uint16_t TempController::filterHalf(Event event) const
 {
     const uint16_t *half = nullptr;
 
@@ -49,7 +50,7 @@ void TempController::processHalfEvent(Event event)
             break;
     }
 
-    evaluateCondition(static_cast<uint16_t>(generateFilteredAverage(half)));
+    return static_cast<uint16_t>(generateFilteredAverage(half));
 }
 
 uint16_t TempController::medianFilter5(const uint16_t *buffer)
@@ -97,8 +98,9 @@ void TempController::changeCondition(Condition condition, uint16_t tempDeg)
 }
 
 /* NORMAL < 85 C, WARNING >= 85 C, CRITICAL >= 105 C or < 5 C.
-   A condition is left only HYSTERESIS_DEG back inside the band. */
-void TempController::evaluateCondition(uint16_t value)
+   A condition is left only HYSTERESIS_DEG back inside the band.
+   The first measurement has nothing to hold, so it takes the plain limits. */
+void TempController::evaluate(uint16_t value)
 {
     uint16_t tempDeg = 0u;
 
@@ -108,6 +110,21 @@ void TempController::evaluateCondition(uint16_t value)
 
     switch (sensorCondition)
     {
+        case Condition::NONE:
+            if ((tempDeg < CRITICAL_LOW_DEG) || (tempDeg >= CRITICAL_HIGH_DEG))
+            {
+                changeCondition(Condition::CRITICAL, tempDeg);
+            }
+            else if (tempDeg >= WARNING_DEG)
+            {
+                changeCondition(Condition::WARNING, tempDeg);
+            }
+            else
+            {
+                changeCondition(Condition::NORMAL, tempDeg);
+            }
+            break;
+
         case Condition::NORMAL:
             if ((tempDeg < CRITICAL_LOW_DEG) || (tempDeg >= CRITICAL_HIGH_DEG))
             {

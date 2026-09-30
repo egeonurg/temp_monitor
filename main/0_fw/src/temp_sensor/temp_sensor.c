@@ -17,14 +17,15 @@ static uint16_t temp_sensor_counts_per_deg = TEMP_SENSOR_REVISION_A_COUNTS_PER_D
    DMA wraps back to it. */
 static uint16_t temp_sensor_buffer[TEMP_SENSOR_SAMPLE_COUNT] = {0};
 
-static temp_sensor_condition_t temp_sensor_condition = TEMP_SENSOR_CONDITION_NORMAL;
+static temp_sensor_condition_t temp_sensor_condition = TEMP_SENSOR_CONDITION_NONE;
 static temp_sensor_callback_t  temp_sensor_callback  = NULL;
 
 static const char * const temp_sensor_condition_name[TEMP_SENSOR_CONDITION_COUNT] =
 {
     "NORMAL",
     "WARNING",
-    "CRITICAL"
+    "CRITICAL",
+    "NONE"
 };
 
 uint8_t temp_sensor_set_condition_callback(temp_sensor_callback_t callback)
@@ -125,8 +126,9 @@ static void temp_sensor_change_condition(temp_sensor_condition_t condition, uint
 }
 
 /* NORMAL < 85 C, WARNING >= 85 C, CRITICAL >= 105 C or < 5 C.
-   A condition is left only TEMP_SENSOR_HYSTERESIS_DEG back inside the band. */
-static void temp_sensor_evaluate_condition(uint16_t value)
+   A condition is left only TEMP_SENSOR_HYSTERESIS_DEG back inside the band.
+   The first measurement has nothing to hold, so it takes the plain limits. */
+void temp_sensor_evaluate(uint16_t value)
 {
     uint16_t temp_deg = 0u;
 
@@ -137,6 +139,22 @@ static void temp_sensor_evaluate_condition(uint16_t value)
 
     switch (temp_sensor_condition)
     {
+        case TEMP_SENSOR_CONDITION_NONE:
+            if ((temp_deg < TEMP_SENSOR_CRITICAL_LOW_DEG) ||
+                (temp_deg >= TEMP_SENSOR_CRITICAL_HIGH_DEG))
+            {
+                temp_sensor_change_condition(TEMP_SENSOR_CONDITION_CRITICAL, temp_deg);
+            }
+            else if (temp_deg >= TEMP_SENSOR_WARNING_DEG)
+            {
+                temp_sensor_change_condition(TEMP_SENSOR_CONDITION_WARNING, temp_deg);
+            }
+            else
+            {
+                temp_sensor_change_condition(TEMP_SENSOR_CONDITION_NORMAL, temp_deg);
+            }
+            break;
+
         case TEMP_SENSOR_CONDITION_NORMAL:
             if ((temp_deg < TEMP_SENSOR_CRITICAL_LOW_DEG) ||
                 (temp_deg >= TEMP_SENSOR_CRITICAL_HIGH_DEG))
@@ -180,7 +198,7 @@ static void temp_sensor_evaluate_condition(uint16_t value)
     }
 }
 
-void temp_sensor_process_half(temp_sensor_event_t event)
+uint16_t temp_sensor_filter_half(temp_sensor_event_t event)
 {
     const uint16_t *half = NULL;
 
@@ -199,5 +217,5 @@ void temp_sensor_process_half(temp_sensor_event_t event)
             break;
     }
 
-    temp_sensor_evaluate_condition((uint16_t)temp_sensor_filtered_average(half));
+    return (uint16_t)temp_sensor_filtered_average(half);
 }
