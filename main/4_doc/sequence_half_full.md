@@ -42,8 +42,7 @@ sequenceDiagram
         MAIN->>APP: app_get_1ms_flag() != 0
         MAIN->>APP: app_clear_1ms_flag()
         MAIN->>APP: app_handle_1ms_event()
-        APP->>DMA: dma_get_half_flag() != 0
-        APP->>DMA: dma_clear_half_flag()<br/>(IRQs disabled around the clear)
+        APP->>DMA: dma_take_half_flag() != 0<br/>(read + clear with IRQs disabled)
         APP->>TS: temp_sensor_filter_half(HALF_TRANSFER_EVENT)
         TS-->>APP: avg of 20 × median of 5 over &buffer[0]
         APP->>TS: temp_sensor_evaluate(avg)<br/>temp_deg = avg / counts_per_deg

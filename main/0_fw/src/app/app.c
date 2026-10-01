@@ -106,18 +106,14 @@ void app_handle_1ms_event(void)
 {
     uint16_t value = 0u;
 
-    if (APP_DMA_GET_HALF_FLAG() != 0u)
+    if (APP_DMA_TAKE_HALF_FLAG() != 0u)
     {
-        APP_DMA_CLEAR_HALF_FLAG();
-
         value = APP_TEMP_SENSOR_FILTER(APP_TEMP_SENSOR_HALF_TRANSFER);
         APP_TEMP_SENSOR_EVALUATE(value);
     }
 
-    if (APP_DMA_GET_FULL_FLAG() != 0u)
+    if (APP_DMA_TAKE_FULL_FLAG() != 0u)
     {
-        APP_DMA_CLEAR_FULL_FLAG();
-
         value = APP_TEMP_SENSOR_FILTER(APP_TEMP_SENSOR_FULL_TRANSFER);
         APP_TEMP_SENSOR_EVALUATE(value);
     }

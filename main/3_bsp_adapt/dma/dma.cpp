@@ -18,22 +18,12 @@ uint8_t Dma::deinit()
     return dma_deinit();
 }
 
-uint8_t Dma::get_half_flag()
+uint8_t Dma::take_half_flag()
 {
-    return dma_get_half_flag();
+    return dma_take_half_flag();
 }
 
-void Dma::clear_half_flag()
+uint8_t Dma::take_full_flag()
 {
-    dma_clear_half_flag();
-}
-
-uint8_t Dma::get_full_flag()
-{
-    return dma_get_full_flag();
-}
-
-void Dma::clear_full_flag()
-{
-    dma_clear_full_flag();
+    return dma_take_full_flag();
 }

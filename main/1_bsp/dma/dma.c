@@ -85,26 +85,26 @@ void dma_mock_sample(uint16_t sample)
 }
 #endif
 
-uint8_t dma_get_half_flag(void)
+uint8_t dma_take_half_flag(void)
 {
-    return dma_half_flag;
-}
+    uint8_t flag = 0u;
 
-void dma_clear_half_flag(void)
-{
     DMA_IRQ_DISABLE();
+    flag          = dma_half_flag;
     dma_half_flag = 0u;
     DMA_IRQ_ENABLE();
+
+    return flag;
 }
 
-uint8_t dma_get_full_flag(void)
+uint8_t dma_take_full_flag(void)
 {
-    return dma_full_flag;
-}
+    uint8_t flag = 0u;
 
-void dma_clear_full_flag(void)
-{
     DMA_IRQ_DISABLE();
+    flag          = dma_full_flag;
     dma_full_flag = 0u;
     DMA_IRQ_ENABLE();
+
+    return flag;
 }

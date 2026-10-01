@@ -56,10 +56,8 @@ classDiagram
             <<interface>>
             +init(buffer, size) uint8_t
             +deinit() uint8_t
-            +get_half_flag() uint8_t
-            +clear_half_flag()
-            +get_full_flag() uint8_t
-            +clear_full_flag()
+            +take_half_flag() uint8_t
+            +take_full_flag() uint8_t
         }
         class Dma
 
@@ -135,5 +133,5 @@ classDiagram
 - **Interfaces:** pure virtual, with protected non-virtual destructors and no
   copy. Objects are never deleted through an interface.
 - **Adapters:** each `bsp_adapt` class forwards to the C BSP (`adc_init()`,
-  `dma_get_half_flag()`, ...) through `extern "C"`. The interrupt handlers stay
+  `dma_take_half_flag()`, ...) through `extern "C"`. The interrupt handlers stay
   in the C BSP.

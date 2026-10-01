@@ -20,11 +20,9 @@ extern void dma_full_transfer_isr(void);
 extern void dma_mock_sample(uint16_t sample);
 #endif
 
-/* Set by the interrupt handlers, cleared by the superloop. */
-extern uint8_t dma_get_half_flag(void);
-extern void    dma_clear_half_flag(void);
-
-extern uint8_t dma_get_full_flag(void);
-extern void    dma_clear_full_flag(void);
+/* Set by the interrupt handlers. Returns the flag and clears it, with
+   interrupts disabled, so no event is lost between the read and the clear. */
+extern uint8_t dma_take_half_flag(void);
+extern uint8_t dma_take_full_flag(void);
 
 #endif /* DMA_IFA_H */

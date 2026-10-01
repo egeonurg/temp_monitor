@@ -58,15 +58,13 @@ void AppOrchestrator::performServices()
     {
         tickTimer.clear_1ms_flag();
 
-        if (dma.get_half_flag())
+        if (dma.take_half_flag())
         {
-            dma.clear_half_flag();
             tempSensor.evaluate(tempSensor.filterHalf(ITempController::Event::HALF_TRANSFER));
         }
 
-        if (dma.get_full_flag())
+        if (dma.take_full_flag())
         {
-            dma.clear_full_flag();
             tempSensor.evaluate(tempSensor.filterHalf(ITempController::Event::FULL_TRANSFER));
         }
 

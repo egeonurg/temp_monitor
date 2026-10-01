@@ -47,10 +47,8 @@
 
 #define APP_DMA_OK                          DMA_OK
 #define APP_DMA_INIT(buffer, size)          dma_init(buffer, size)
-#define APP_DMA_GET_HALF_FLAG()             dma_get_half_flag()
-#define APP_DMA_CLEAR_HALF_FLAG()           dma_clear_half_flag()
-#define APP_DMA_GET_FULL_FLAG()             dma_get_full_flag()
-#define APP_DMA_CLEAR_FULL_FLAG()           dma_clear_full_flag()
+#define APP_DMA_TAKE_HALF_FLAG()            dma_take_half_flag()
+#define APP_DMA_TAKE_FULL_FLAG()            dma_take_full_flag()
 
 #define APP_ADC_OK                          ADC_OK
 #define APP_ADC_INIT()                      adc_init()
