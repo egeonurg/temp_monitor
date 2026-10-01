@@ -13,10 +13,12 @@ public:
     virtual uint8_t init(uint16_t *buffer, uint16_t size) = 0;
     virtual uint8_t deinit()                              = 0;
 
-    virtual void get_transfer_counts(uint32_t *half, uint32_t *full) = 0;
+    /* Set by the interrupt handlers, cleared by the superloop. */
+    virtual uint8_t get_half_flag()   = 0;
+    virtual void    clear_half_flag() = 0;
 
-    virtual uint16_t get_half_event_number() = 0;
-    virtual uint16_t get_full_event_number() = 0;
+    virtual uint8_t get_full_flag()   = 0;
+    virtual void    clear_full_flag() = 0;
 
 protected:
     IDma()  = default;

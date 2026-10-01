@@ -33,7 +33,7 @@ sequenceDiagram
     end
 
     DMA-)DMA_ISR: half-transfer IRQ (buffer[0…99] stable)
-    DMA_ISR->>DMA_ISR: dma_half_count++ (nothing else)
+    DMA_ISR->>DMA_ISR: dma_half_flag = 1 (nothing else)
 
     par DMA keeps filling buffer[100…199]
         TIM1->>ADC: next samples…
@@ -42,8 +42,8 @@ sequenceDiagram
         MAIN->>APP: app_get_1ms_flag() != 0
         MAIN->>APP: app_clear_1ms_flag()
         MAIN->>APP: app_handle_1ms_event()
-        APP->>DMA: half + full event numbers
-        DMA-->>APP: count (changed since last tick, odd → first half)
+        APP->>DMA: dma_get_half_flag() != 0
+        APP->>DMA: dma_clear_half_flag()<br/>(IRQs disabled around the clear)
         APP->>TS: temp_sensor_filter_half(HALF_TRANSFER_EVENT)
         TS-->>APP: avg of 20 × median of 5 over &buffer[0]
         APP->>TS: temp_sensor_evaluate(avg)<br/>temp_deg = avg / counts_per_deg
@@ -59,7 +59,7 @@ sequenceDiagram
     end
 
     DMA-)DMA_ISR: full-transfer IRQ (buffer[100…199] stable), DMA wraps to 0
-    DMA_ISR->>DMA_ISR: dma_full_count++
+    DMA_ISR->>DMA_ISR: dma_full_flag = 1
     Note over MAIN,LED: Same path with FULL_TRANSFER_EVENT → &buffer[100]<br/>while DMA refills buffer[0…99]
 ```
 
@@ -67,7 +67,7 @@ sequenceDiagram
 
 - **Low jitter:** TIM1 → ADC → DMA is a hardware chain. The sampling instant does
   not depend on what the CPU is doing.
-- **Short ISRs:** the DMA interrupts only count events. All processing runs in the
+- **Short ISRs:** the DMA interrupts only set a flag. All processing runs in the
   superloop.
 - **Double buffer:** the CPU processes one half while the DMA fills the other. A
   half must be processed within one half period (100 samples × 100 µs = 10 ms).

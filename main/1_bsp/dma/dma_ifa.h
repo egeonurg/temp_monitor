@@ -15,15 +15,16 @@ extern uint8_t dma_deinit(void);
 extern void dma_half_transfer_isr(void);
 extern void dma_full_transfer_isr(void);
 
-extern void dma_get_transfer_counts(uint32_t *half, uint32_t *full);
-
 #if defined(SIM_ENABLE)
 /* Called by the simulator for every converted sample. */
 extern void dma_mock_sample(uint16_t sample);
 #endif
 
-extern uint16_t dma_get_half_event_number(void);
+/* Set by the interrupt handlers, cleared by the superloop. */
+extern uint8_t dma_get_half_flag(void);
+extern void    dma_clear_half_flag(void);
 
-extern uint16_t dma_get_full_event_number(void);
+extern uint8_t dma_get_full_flag(void);
+extern void    dma_clear_full_flag(void);
 
 #endif /* DMA_IFA_H */

@@ -28,7 +28,6 @@
 #define APP_TEMP_SENSOR_BUFFER_SIZE()       temp_sensor_get_buffer_size()
 #define APP_TEMP_SENSOR_FILTER(event)       temp_sensor_filter_half(event)
 #define APP_TEMP_SENSOR_EVALUATE(value)     temp_sensor_evaluate(value)
-#define APP_TEMP_SENSOR_EVENT_T             temp_sensor_event_t
 #define APP_TEMP_SENSOR_HALF_TRANSFER       TEMP_SENSOR_HALF_TRANSFER_EVENT
 #define APP_TEMP_SENSOR_FULL_TRANSFER       TEMP_SENSOR_FULL_TRANSFER_EVENT
 #define APP_TEMP_SENSOR_OK                  TEMP_SENSOR_OK
@@ -48,7 +47,10 @@
 
 #define APP_DMA_OK                          DMA_OK
 #define APP_DMA_INIT(buffer, size)          dma_init(buffer, size)
-#define APP_DMA_EVENT_NUMBER()              ((uint16_t)(dma_get_half_event_number() + dma_get_full_event_number()))
+#define APP_DMA_GET_HALF_FLAG()             dma_get_half_flag()
+#define APP_DMA_CLEAR_HALF_FLAG()           dma_clear_half_flag()
+#define APP_DMA_GET_FULL_FLAG()             dma_get_full_flag()
+#define APP_DMA_CLEAR_FULL_FLAG()           dma_clear_full_flag()
 
 #define APP_ADC_OK                          ADC_OK
 #define APP_ADC_INIT()                      adc_init()

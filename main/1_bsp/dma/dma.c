@@ -6,8 +6,8 @@ static uint16_t  dma_size      = 0u;
 static uint16_t  dma_half_size = 0u;
 static uint16_t  dma_index     = 0u;
 
-static volatile uint32_t dma_half_count = 0u;
-static volatile uint32_t dma_full_count = 0u;
+static volatile uint8_t dma_half_flag = 0u;
+static volatile uint8_t dma_full_flag = 0u;
 
 /* Mock */
 uint8_t dma_init(uint16_t *buffer, uint16_t size)
@@ -21,8 +21,8 @@ uint8_t dma_init(uint16_t *buffer, uint16_t size)
         dma_half_size = (uint16_t)(size / 2u);
         dma_index     = 0u;
 
-        dma_half_count = 0u;
-        dma_full_count = 0u;
+        dma_half_flag = 0u;
+        dma_full_flag = 0u;
 
         PLATFORM_LOG_TAG(DMA_LOG_TAG, "init: %u samples, half %u, request source %u\n",
                          (unsigned int)dma_size,
@@ -52,7 +52,7 @@ void dma_half_transfer_isr(void)
 {
     if (dma_buffer != NULL)
     {
-        dma_half_count++;
+        dma_half_flag = 1u;
     }
 }
 
@@ -60,16 +60,7 @@ void dma_full_transfer_isr(void)
 {
     if (dma_buffer != NULL)
     {
-        dma_full_count++;
-    }
-}
-
-void dma_get_transfer_counts(uint32_t *half, uint32_t *full)
-{
-    if ((half != NULL) && (full != NULL))
-    {
-        *half = dma_half_count;
-        *full = dma_full_count;
+        dma_full_flag = 1u;
     }
 }
 
@@ -94,12 +85,26 @@ void dma_mock_sample(uint16_t sample)
 }
 #endif
 
-uint16_t dma_get_half_event_number(void)
+uint8_t dma_get_half_flag(void)
 {
-    return (uint16_t)dma_half_count;
+    return dma_half_flag;
 }
 
-uint16_t dma_get_full_event_number(void)
+void dma_clear_half_flag(void)
 {
-    return (uint16_t)dma_full_count;
+    DMA_IRQ_DISABLE();
+    dma_half_flag = 0u;
+    DMA_IRQ_ENABLE();
+}
+
+uint8_t dma_get_full_flag(void)
+{
+    return dma_full_flag;
+}
+
+void dma_clear_full_flag(void)
+{
+    DMA_IRQ_DISABLE();
+    dma_full_flag = 0u;
+    DMA_IRQ_ENABLE();
 }

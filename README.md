@@ -19,10 +19,10 @@ Bare-metal temperature monitor firmware, runnable on a PC with mocked hardware.
 | [main/1_bsp](main/1_bsp) | C board support: `adc`, `dma`, `gpio`, `i2c`, `tim` (mocked for the PC) |
 | [main/2_fw_cpp](main/2_fw_cpp) | C++ firmware: `AppOrchestrator`, `TempController`, `EepromController`, `LedController` |
 | [main/3_bsp_adapt](main/3_bsp_adapt) | C++ interfaces and classes over the C BSP |
-| [main/4_doc](main/4_doc) | Diagrams and design notes |
+| [main/4_doc](main/4_doc) | Diagrams, design notes, ADRs |
 | [main/5_bat](main/5_bat) | Build, run and clean scripts |
 | [main/6_sim](main/6_sim) | PC simulation: 1 ms interrupt, A/D data with noise and spikes |
-| [main/platform](main/platform) | Assert and log helpers |
+| [main/platform](main/platform) | Assert, log and interrupt disable/enable helpers |
 
 ## Documents
 
@@ -41,6 +41,8 @@ The full DMA half/full transfer → temperature → LED sequence, with notes, is
 | [Sequence.png](main/4_doc/Sequence.png) | TIM1 → A/D → DMA in hardware, 1 ms superloop, LED update |
 | [sequence_half_full.md](main/4_doc/sequence_half_full.md) | DMA half/full transfer → temperature → LED (Mermaid) |
 | [component_structure.md](main/4_doc/component_structure.md) | `_ifa` / `_inc` / `_cfg` file roles |
+| [ADR 0001](main/4_doc/adr/0001-condition-hysteresis.md) | 2 °C hysteresis on the temperature condition |
+| [ADR 0002](main/4_doc/adr/0002-no-heap-no-exceptions-no-rtti.md) | No heap, no exceptions, no RTTI |
 
 ## Build and run
 

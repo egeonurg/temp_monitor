@@ -9,10 +9,11 @@ public:
     uint8_t init(uint16_t *buffer, uint16_t size) override;
     uint8_t deinit() override;
 
-    void get_transfer_counts(uint32_t *half, uint32_t *full) override;
+    uint8_t get_half_flag() override;
+    void    clear_half_flag() override;
 
-    uint16_t get_half_event_number() override;
-    uint16_t get_full_event_number() override;
+    uint8_t get_full_flag() override;
+    void    clear_full_flag() override;
 };
 
 #endif /* DMA_HPP */

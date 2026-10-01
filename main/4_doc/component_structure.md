@@ -77,7 +77,7 @@ Naming by role rather than by provider is what makes the remap worth having:
 ## `<name>_cfg.h` — configuration
 
 Values that are tuned rather than designed: periods, pin numbers, buffer sizes,
-addresses, resolutions, log intervals. Private to the component.
+addresses, resolutions. Private to the component.
 
 ```c
 /* tim_cfg.h */
@@ -136,7 +136,7 @@ Note the one gap: CMake does not detect cycles between static libraries, so
 
 | Layer | Component | `_ifa.h` | `_inc.h` | `_cfg.h` | Depends on |
 |---|---|:--:|:--:|:--:|---|
-| `platform` | platform | — | — | — | (headers only: log, assert) |
+| `platform` | platform | — | — | — | (headers only: log, assert, irq) |
 | `1_bsp` | gpio | yes | yes | — | platform |
 | `1_bsp` | i2c | yes | yes | yes | (none) |
 | `1_bsp` | tim | yes | yes | yes | platform |
@@ -149,7 +149,7 @@ Note the one gap: CMake does not detect cycles between static libraries, so
 | `6_sim` | sim | yes | yes | yes | tim, dma, platform (host build only) |
 
 `platform` is the exception to the four-file shape: it is a header-only
-interface library (`platform_log.h`, `platform_assert.h`) sitting below the BSP,
+interface library (`platform_log.h`, `platform_assert.h`, `platform_irq.h`) sitting below the BSP,
 so drivers can log and assert without depending upwards on the firmware layer.
 
 `gpio` has no `_cfg.h` because it has nothing to tune yet; pin numbers belong to
@@ -160,7 +160,7 @@ the components that own the pins.
 1. Create the folder with the four files and the include guards.
 2. Put the public prototypes in `_ifa.h`, with `extern` and the includes they need.
 3. In `_inc.h`, include the `_ifa.h` of each dependency and remap them to
-   `<NAME>_*` macros; add the log and assert macros.
+   `<NAME>_*` macros; add the log tag.
 4. Put tunables in `_cfg.h`.
 5. Write `CMakeLists.txt` as above and add the folder to the parent's
    `add_subdirectory` list.

@@ -1,9 +1,6 @@
 #include "app_ifa.h"
 #include "app_inc.h"
 
-/* Half + full transfer events handled so far */
-static uint16_t app_event_number = 0u;
-
 static char app_serial_number[APP_EEPROM_SERIAL_NUMBER_LENGTH + 1u] = {0};
 
 static void app_on_temp_condition(APP_TEMP_SENSOR_CONDITION_T condition)
@@ -107,43 +104,21 @@ void app_clear_1ms_flag(void)
 
 void app_handle_1ms_event(void)
 {
-    uint16_t event_number = 0u;
-    uint16_t new_events   = 0u;
     uint16_t value = 0u;
-    APP_TEMP_SENSOR_EVENT_T event = APP_TEMP_SENSOR_FULL_TRANSFER;
 
-    event_number = APP_DMA_EVENT_NUMBER();
-    new_events   = (uint16_t)(event_number - app_event_number);
-
-    if (new_events != 0u)
+    if (APP_DMA_GET_HALF_FLAG() != 0u)
     {
-        app_event_number = event_number;
+        APP_DMA_CLEAR_HALF_FLAG();
 
-        /* The DMA alternates half, full, half, ... so an odd count means the
-           first half was filled last. uint16_t wrap-around keeps the parity. */
-        if ((event_number % 2u) != 0u)
-        {
-            event = APP_TEMP_SENSOR_HALF_TRANSFER;
-        }
+        value = APP_TEMP_SENSOR_FILTER(APP_TEMP_SENSOR_HALF_TRANSFER);
+        APP_TEMP_SENSOR_EVALUATE(value);
+    }
 
-        /* Only the latest half is still intact, older ones are being overwritten. */
-        if (new_events > 1u)
-        {
-            PLATFORM_LOG_TAG(APP_LOG_TAG, "Overrun: skipped %u half buffer(s)\n",
-                             (unsigned int)(new_events - 1u));
-        }
+    if (APP_DMA_GET_FULL_FLAG() != 0u)
+    {
+        APP_DMA_CLEAR_FULL_FLAG();
 
-        value = APP_TEMP_SENSOR_FILTER(event);
-
-        /* The next event means the DMA is writing into this half again, so
-           the value may mix old and new samples: drop it. */
-        if (APP_DMA_EVENT_NUMBER() == event_number)
-        {
-            APP_TEMP_SENSOR_EVALUATE(value);
-        }
-        else
-        {
-            PLATFORM_LOG_TAG(APP_LOG_TAG, "Torn read: half buffer dropped\n");
-        }
+        value = APP_TEMP_SENSOR_FILTER(APP_TEMP_SENSOR_FULL_TRANSFER);
+        APP_TEMP_SENSOR_EVALUATE(value);
     }
 }

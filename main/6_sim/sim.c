@@ -115,8 +115,6 @@ static DWORD WINAPI sim_thread(LPVOID argument)
     uint32_t      us_since_tick = 0u;
     uint32_t      slot          = 0u;
     uint32_t      logged_slot   = (uint32_t)SIM_SETPOINT_COUNT;
-    uint32_t      half_count    = 0u;
-    uint32_t      full_count    = 0u;
 
     (void)argument;
 
@@ -155,15 +153,11 @@ static DWORD WINAPI sim_thread(LPVOID argument)
         }
     }
 
-    dma_get_transfer_counts(&half_count, &full_count);
-
     PLATFORM_LOG_TAG(SIM_LOG_TAG, "run finished: %u ms, %u tick(s), %u sample(s), "
-                     "%u half + %u full DMA interrupt(s), %u spike(s)\n",
+                     "%u spike(s)\n",
                      (unsigned int)SIM_RUN_MS,
                      (unsigned int)sim_tick_count,
                      (unsigned int)sim_sample_count,
-                     (unsigned int)half_count,
-                     (unsigned int)full_count,
                      (unsigned int)sim_spike_count);
 
     /* Last: main exits as soon as it sees this. */

@@ -55,38 +55,16 @@ void AppOrchestrator::performServices()
     {
         tickTimer.clear_1ms_flag();
 
-        uint16_t events    = static_cast<uint16_t>(dma.get_half_event_number() + dma.get_full_event_number());
-        uint16_t newEvents = static_cast<uint16_t>(events - eventNumber);
-
-        if (newEvents != 0u)
+        if (dma.get_half_flag())
         {
-            eventNumber = events;
+            dma.clear_half_flag();
+            tempSensor.evaluate(tempSensor.filterHalf(ITempController::Event::HALF_TRANSFER));
+        }
 
-            /* The DMA alternates half, full, half, ... so an odd count means the
-               first half was filled last. uint16_t wrap-around keeps the parity. */
-            ITempController::Event event = ((events % 2u) != 0u) ?
-                                           ITempController::Event::HALF_TRANSFER :
-                                           ITempController::Event::FULL_TRANSFER;
-
-            /* Only the latest half is still intact, older ones are being overwritten. */
-            if (newEvents > 1u)
-            {
-                PLATFORM_LOG_TAG(APP_LOG_TAG, "Overrun: skipped %u half buffer(s)\n",
-                                 static_cast<unsigned int>(newEvents - 1u));
-            }
-
-            uint16_t value = tempSensor.filterHalf(event);
-
-            /* The next event means the DMA is writing into this half again, so
-               the value may mix old and new samples: drop it. */
-            if (static_cast<uint16_t>(dma.get_half_event_number() + dma.get_full_event_number()) == events)
-            {
-                tempSensor.evaluate(value);
-            }
-            else
-            {
-                PLATFORM_LOG_TAG(APP_LOG_TAG, "Torn read: half buffer dropped\n");
-            }
+        if (dma.get_full_flag())
+        {
+            dma.clear_full_flag();
+            tempSensor.evaluate(tempSensor.filterHalf(ITempController::Event::FULL_TRANSFER));
         }
 
         updateLeds();
