@@ -30,8 +30,11 @@ void AppOrchestrator::init()
     ret = eeprom.read(EEPROM_SERIAL_ADDR, reinterpret_cast<uint8_t *>(serial), SERIAL_LENGTH);
     PLATFORM_ASSERT(ret == IEepromRead::OK, "Failed to read serial number");
 
-    PLATFORM_LOG_TAG(APP_LOG_TAG, "serial number %s, revision %u\n",
-                     serial, static_cast<unsigned int>(revision));
+    PLATFORM_LOG_TAG(APP_LOG_TAG, "serial number %s\n", serial);
+
+    PLATFORM_LOG_TAG(APP_LOG_TAG, "temp sensor revision %u, %u count(s) per degree\n",
+                     static_cast<unsigned int>(revision),
+                     static_cast<unsigned int>(tempSensor.getCountsPerDeg()));
 
     led.init();
 

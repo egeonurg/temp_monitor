@@ -20,8 +20,10 @@ static const char * const COLOR_NAME[] =
 void LedController::init()
 {
     greenPin.init();
-    yellowPin.init();
     redPin.init();
+    yellowPin.init();
+
+    PLATFORM_LOG_TAG(LED_LOG_TAG, "init: 3 LEDs\n");
 
     allOff();
 }
