@@ -30,7 +30,7 @@ static void app_on_temp_condition(APP_TEMP_SENSOR_CONDITION_T condition)
 
 void app_init(void)
 {
-    uint16_t  temp_sensor_revision = 0u;
+    uint8_t   temp_sensor_revision = 0u;
     uint16_t *sample_buffer        = NULL;
     uint16_t  sample_buffer_size   = 0u;
 
@@ -112,8 +112,6 @@ void app_handle_1ms_event(void)
     uint16_t value = 0u;
     APP_TEMP_SENSOR_EVENT_T event = APP_TEMP_SENSOR_FULL_TRANSFER;
 
-    /* Complete all memory accesses before reading the DMA event counters. */
-    APP_DSB();
     event_number = APP_DMA_EVENT_NUMBER();
     new_events   = (uint16_t)(event_number - app_event_number);
 

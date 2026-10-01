@@ -22,7 +22,7 @@ Bare-metal temperature monitor firmware, runnable on a PC with mocked hardware.
 | [main/4_doc](main/4_doc) | Diagrams and design notes |
 | [main/5_bat](main/5_bat) | Build, run and clean scripts |
 | [main/6_sim](main/6_sim) | PC simulation: 1 ms interrupt, A/D data with noise and spikes |
-| [main/platform](main/platform) | Assert, log and barrier helpers |
+| [main/platform](main/platform) | Assert and log helpers |
 
 ## Documents
 

@@ -13,7 +13,7 @@ static const char * const CONDITION_NAME[] =
     "NONE"
 };
 
-void TempController::init(uint16_t revision)
+void TempController::init(uint8_t revision)
 {
     switch (revision)
     {

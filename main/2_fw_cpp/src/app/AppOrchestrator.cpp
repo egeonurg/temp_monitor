@@ -8,7 +8,6 @@
 
 #include "platform_assert.h"
 #include "platform_log.h"
-#include "platform_barrier.h"
 
 #define APP_LOG_TAG "APP"
 
@@ -19,11 +18,11 @@ static constexpr uint16_t SERIAL_LENGTH        = 7u;
 
 void AppOrchestrator::init()
 {
-    uint16_t revision = 0u;
+    uint8_t revision = 0u;
     char serial[SERIAL_LENGTH + 1u] = {0};
     uint8_t ret = 0u;
 
-    ret = eeprom.read(EEPROM_REVISION_ADDR, reinterpret_cast<uint8_t *>(&revision), sizeof(revision));
+    ret = eeprom.read(EEPROM_REVISION_ADDR, &revision, sizeof(revision));
     PLATFORM_ASSERT(ret == IEepromRead::OK, "Failed to read revision");
 
     tempSensor.init(revision);
@@ -56,8 +55,6 @@ void AppOrchestrator::performServices()
     {
         tickTimer.clear_1ms_flag();
 
-        /* Complete all memory accesses before reading the DMA event counters. */
-        PLATFORM_DSB();
         uint16_t events    = static_cast<uint16_t>(dma.get_half_event_number() + dma.get_full_event_number());
         uint16_t newEvents = static_cast<uint16_t>(events - eventNumber);
 

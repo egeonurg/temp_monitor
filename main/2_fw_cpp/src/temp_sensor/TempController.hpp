@@ -8,7 +8,7 @@ public:
     TempController()=default;
     ~TempController()=default;
 
-    void init(uint16_t revision) override;
+    void init(uint8_t revision) override;
     uint16_t filterHalf(Event event) const override;
     void evaluate(uint16_t value) override;
 

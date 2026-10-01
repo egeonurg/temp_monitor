@@ -10,7 +10,7 @@
 #error "Half buffer must hold a whole number of median windows"
 #endif
 
-static uint16_t temp_sensor_revision       = TEMP_SENSOR_REVISION_EMPTY;
+static uint8_t  temp_sensor_revision       = TEMP_SENSOR_REVISION_EMPTY;
 static uint16_t temp_sensor_counts_per_deg = TEMP_SENSOR_REVISION_A_COUNTS_PER_DEG;
 
 /* Written by the DMA. Each half must be processed within 10 ms, before the
@@ -51,7 +51,7 @@ uint16_t temp_sensor_get_buffer_size(void)
     return TEMP_SENSOR_SAMPLE_COUNT;
 }
 
-void temp_sensor_init(uint16_t revision)
+void temp_sensor_init(uint8_t revision)
 {
     switch (revision)
     {
@@ -71,7 +71,7 @@ void temp_sensor_init(uint16_t revision)
     }
 }
 
-uint16_t temp_sensor_get_revision(void)
+uint8_t temp_sensor_get_revision(void)
 {
     return temp_sensor_revision;
 }

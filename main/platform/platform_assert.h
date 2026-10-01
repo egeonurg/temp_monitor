@@ -11,7 +11,7 @@
 #define PLATFORM_ASSERT_FLUSH() ((void)0)
 #endif
 
-/* Logs and traps. On target the watchdog resets the device. */
+/* Logs and traps. */
 #define PLATFORM_ASSERT(condition, message)                        \
     do                                                             \
     {                                                              \
@@ -19,7 +19,6 @@
         {                                                          \
             PLATFORM_LOG(PLATFORM_ASSERT_LOG "%s:%d: %s\n",        \
                          __FILE__, __LINE__, (message));           \
-                                                                   \
             PLATFORM_ASSERT_FLUSH();                               \
             for (;;)                                               \
             {                                                      \

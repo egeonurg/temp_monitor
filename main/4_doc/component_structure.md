@@ -63,8 +63,7 @@ logging macro. Asserts use `PLATFORM_ASSERT` directly:
 ```c
 #define LED_LOG_TAG "LED"
 
-PLATFORM_LOG_TAG(LED_LOG_TAG, "%s on
-", led_name[led_id]);   /* "#LED_LOG GREEN on" */
+PLATFORM_LOG_TAG(LED_LOG_TAG, "%s on\n", led_name[led_id]);   /* "#LED_LOG GREEN on" */
 ```
 
 Naming by role rather than by provider is what makes the remap worth having:

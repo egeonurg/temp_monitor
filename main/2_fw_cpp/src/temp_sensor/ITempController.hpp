@@ -21,10 +21,10 @@ public:
     };
 
     /* Revision values stored in the EEPROM */
-    static constexpr uint16_t REVISION_A = 0x0000u;
-    static constexpr uint16_t REVISION_B = 0x0001u;
+    static constexpr uint8_t REVISION_A = 0x00u;
+    static constexpr uint8_t REVISION_B = 0x01u;
 
-    virtual void init(uint16_t revision) = 0;
+    virtual void init(uint8_t revision) = 0;
     /* Filtered value of the half the event reports, in A/D counts */
     virtual uint16_t filterHalf(Event event) const = 0;
     /* Runs the condition state machine on a filtered value */

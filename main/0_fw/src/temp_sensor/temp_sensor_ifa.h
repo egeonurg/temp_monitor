@@ -7,9 +7,9 @@
 #define TEMP_SENSOR_ERR 0x01
 
 /* Revision values stored in the EEPROM */
-#define TEMP_SENSOR_REVISION_A     0x0000u
-#define TEMP_SENSOR_REVISION_B     0x0001u
-#define TEMP_SENSOR_REVISION_EMPTY 0xFFFFu
+#define TEMP_SENSOR_REVISION_A     0x00u
+#define TEMP_SENSOR_REVISION_B     0x01u
+#define TEMP_SENSOR_REVISION_EMPTY 0xFFu
 
 typedef enum
 {
@@ -28,9 +28,9 @@ typedef enum
 
 typedef void (*temp_sensor_callback_t)(temp_sensor_condition_t condition);
 
-extern void temp_sensor_init(uint16_t revision);
+extern void temp_sensor_init(uint8_t revision);
 
-extern uint16_t temp_sensor_get_revision(void);
+extern uint8_t temp_sensor_get_revision(void);
 
 extern uint16_t temp_sensor_get_counts_per_deg(void);
 
