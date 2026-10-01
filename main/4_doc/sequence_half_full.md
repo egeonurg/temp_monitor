@@ -42,6 +42,7 @@ sequenceDiagram
         MAIN->>APP: app_get_1ms_flag() != 0
         MAIN->>APP: app_clear_1ms_flag()
         MAIN->>APP: app_handle_1ms_event()
+        APP->>APP: DSB
         APP->>DMA: half + full event numbers
         DMA-->>APP: count (changed since last tick, odd → first half)
         APP->>TS: temp_sensor_filter_half(HALF_TRANSFER_EVENT)

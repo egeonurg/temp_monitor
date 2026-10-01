@@ -57,14 +57,14 @@ name this component owns**:
 a different one, or for a test stub, is an edit to this header alone — the `.c`
 does not change. This is compile-time dependency inversion, at no runtime cost.
 
-The same header defines the component's logging and assert macros, built on the
-platform ones:
+The same header defines the component's log tag, used with the platform
+logging macro. Asserts use `PLATFORM_ASSERT` directly:
 
 ```c
-#define LED_LOG_TAG "#LED_LOG "
-#define LED_LOG(...) PLATFORM_LOG(LED_LOG_TAG __VA_ARGS__)
+#define LED_LOG_TAG "LED"
 
-#define TEMP_SENSOR_ASSERT(condition, message) PLATFORM_ASSERT(condition, message)
+PLATFORM_LOG_TAG(LED_LOG_TAG, "%s on
+", led_name[led_id]);   /* "#LED_LOG GREEN on" */
 ```
 
 Naming by role rather than by provider is what makes the remap worth having:

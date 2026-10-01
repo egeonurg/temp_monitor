@@ -6,6 +6,7 @@
 
 #include "platform_assert.h"
 #include "platform_log.h"
+#include "platform_barrier.h"
 
 #include "app_cfg.h"
 #include "eeprom_ifa.h"
@@ -42,7 +43,6 @@
 #define APP_LED_OK                          LED_OK
 #define APP_LED_INIT()                      led_init()
 #define APP_LED_SET_ACTIVE(led_id)          led_set_active(led_id)
-#define APP_LED_ALL_OFF()                   led_all_off()
 #define APP_LED_NORMAL                      LED_GREEN
 #define APP_LED_WARNING                     LED_YELLOW
 #define APP_LED_CRITICAL                    LED_RED
@@ -60,6 +60,8 @@
 #define APP_TIM_INIT(tim_id)                tim_init(tim_id)
 #define APP_TIM_GET_1MS_FLAG()              tim_get_1ms_flag()
 #define APP_TIM_CLEAR_1MS_FLAG()            tim_clear_1ms_flag()
+
+#define APP_DSB()                           PLATFORM_DSB()
 
 #define APP_LOG_TAG "APP"
 

@@ -28,12 +28,6 @@ static void app_on_temp_condition(APP_TEMP_SENSOR_CONDITION_T condition)
     }
 }
 
-/* Called by PLATFORM_ASSERT before it traps. */
-void platform_safe_state(void)
-{
-    (void)APP_LED_ALL_OFF();
-}
-
 void app_init(void)
 {
     uint16_t  temp_sensor_revision = 0u;
@@ -113,10 +107,15 @@ void app_clear_1ms_flag(void)
 
 void app_handle_1ms_event(void)
 {
-    uint16_t event_number = APP_DMA_EVENT_NUMBER();
-    uint16_t new_events   = (uint16_t)(event_number - app_event_number);
+    uint16_t event_number = 0u;
+    uint16_t new_events   = 0u;
     uint16_t value = 0u;
     APP_TEMP_SENSOR_EVENT_T event = APP_TEMP_SENSOR_FULL_TRANSFER;
+
+    /* Complete all memory accesses before reading the DMA event counters. */
+    APP_DSB();
+    event_number = APP_DMA_EVENT_NUMBER();
+    new_events   = (uint16_t)(event_number - app_event_number);
 
     if (new_events != 0u)
     {

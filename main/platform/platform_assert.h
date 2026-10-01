@@ -11,14 +11,7 @@
 #define PLATFORM_ASSERT_FLUSH() ((void)0)
 #endif
 
-#ifdef __cplusplus
-extern "C"
-#endif
-/* Provided by the application: drives the outputs to a safe state (LEDs off). */
-void platform_safe_state(void);
-
-/* Logs, goes to the safe state and traps. On target the watchdog resets the
-   device. */
+/* Logs and traps. On target the watchdog resets the device. */
 #define PLATFORM_ASSERT(condition, message)                        \
     do                                                             \
     {                                                              \
@@ -26,7 +19,7 @@ void platform_safe_state(void);
         {                                                          \
             PLATFORM_LOG(PLATFORM_ASSERT_LOG "%s:%d: %s\n",        \
                          __FILE__, __LINE__, (message));           \
-            platform_safe_state();                                 \
+                                                                   \
             PLATFORM_ASSERT_FLUSH();                               \
             for (;;)                                               \
             {                                                      \

@@ -52,8 +52,6 @@ void dma_half_transfer_isr(void)
 {
     if (dma_buffer != NULL)
     {
-        /* Complete all prior memory accesses before publishing the count. */
-        DMA_DSB();
         dma_half_count++;
     }
 }
@@ -62,8 +60,6 @@ void dma_full_transfer_isr(void)
 {
     if (dma_buffer != NULL)
     {
-        /* Complete all prior memory accesses before publishing the count. */
-        DMA_DSB();
         dma_full_count++;
     }
 }
