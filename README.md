@@ -41,6 +41,7 @@ The full DMA half/full transfer → temperature → LED sequence, with notes, is
 | [Sequence.png](main/4_doc/Sequence.png) | TIM1 → A/D → DMA in hardware, 1 ms superloop, LED update |
 | [sequence_half_full.md](main/4_doc/sequence_half_full.md) | DMA half/full transfer → temperature → LED (Mermaid) |
 | [component_structure.md](main/4_doc/component_structure.md) | `_ifa` / `_inc` / `_cfg` file roles |
+| [class_diagram_cpp.md](main/4_doc/class_diagram_cpp.md) | C++ classes, interfaces and dependencies (Mermaid) |
 | [ADR 0001](main/4_doc/adr/0001-condition-hysteresis.md) | 2 °C hysteresis on the temperature condition |
 | [ADR 0002](main/4_doc/adr/0002-no-heap-no-exceptions-no-rtti.md) | No heap, no exceptions, no RTTI |
 
